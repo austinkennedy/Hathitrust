@@ -38,7 +38,6 @@ jupyter_server==2.1.0
 jupyter_server_terminals==0.4.4
 jupyterlab-pygments==0.2.2
 jupyterlab-widgets==3.0.5
-kaleido==0.1.0.post1
 kiwisolver==1.4.4
 MarkupSafe==2.1.2
 matplotlib==3.6.3
@@ -71,8 +70,6 @@ pyrsistent==0.19.3
 python-dateutil==2.8.2
 python-json-logger==2.0.4
 pytz==2022.7
-pywin32==305
-pywinpty==2.0.10
 PyYAML==6.0
 pyzmq==25.0.0
 qtconsole==5.4.0
