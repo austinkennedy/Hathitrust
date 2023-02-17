@@ -12,6 +12,10 @@ volume_weights = pd.read_csv("../temporary/topic_weights.csv")
 cross = pd.read_csv('../temporary/cross_topics.csv')
 topics = pd.read_csv('../input/20191007_keys.txt', sep = '\t', lineterminator='\n', header=None)
 
+#fix topic numbers
+topics.drop(columns=0, inplace=True)
+topics['topic_number'] = list(range(1,61))
+
 group = [5,9,22,26,35,46,50,55,60] #innocuous topics to be eliminated
 
 #functions
@@ -30,7 +34,7 @@ def get_shares(top = topics, omit = None, length = 3):
     #'length' is the size of the categories (i.e. how many topics should make up a category), default 3
 
     n = len(top) #get number of topics
-    topic_numbers = list(range(1,n+1)) # generate topic numbers
+    topic_numbers = list(topics['topic_number']) # generate topic numbers
 
     if omit is not None:
         topic_numbers = [i for i in topic_numbers if i not in omit] #remove innocuous topics
@@ -95,8 +99,8 @@ print('Finding distinct categories')
 clusters_corpus = distinct_categories(clusters)
 print(clusters_corpus)
 
-
-
+print('Exporting Topics')
+topics.to_csv('../temporary/topics.csv', index=False)
 
 
 
