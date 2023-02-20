@@ -2,4 +2,9 @@ This repository corresponds to "Enlightenment Ideals and Belief in Science in th
 
 Run in the following order:
 
-cross_topics.py --> categories.py --> shares.py --> 
+cross_topics.py --> categories.py --> shares.py --> topic_volume_weights.py 
+
+
+
+Notes:
+Plotly occasionally acts up when making ternary plots...it usually throws an error about 'kaleido' engine, on windows this is solved using 'pip install kaleido==0.1.0post1', on Mac this was solved simply by installing latest version of kaleido and plotly
