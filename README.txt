@@ -2,7 +2,7 @@ This repository corresponds to "Enlightenment Ideals and Belief in Science in th
 
 Run in the following order:
 
-cross_topics.py --> categories.py --> shares.py --> topic_volume_weights.py 
+cross_topics.py --> categories.py --> shares.py --> topic_volume_weights.py --> volume_data.py
 
 
 

@@ -49,4 +49,5 @@ for year in years:
 moving_average_shares = pd.DataFrame.from_dict(ct_shares)
 
 print('Exporting data')
+print(moving_average_shares.head())
 moving_average_shares.to_csv('../temporary/moving_average_shares.csv', index=True)
