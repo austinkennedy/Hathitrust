@@ -103,7 +103,7 @@ volumes = pd.concat(ls, axis = 0)
 volumes
 
 #export
-volumes.to_csv('../temporary/volumes.csv')
+volumes.to_csv('../temporary/volumes.csv', index=False)
 
 #Topic ternary plots-much easier to do it within this script so as to not have to export/import dictionary of dataframes
 
