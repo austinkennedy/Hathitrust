@@ -11,7 +11,7 @@ volumes = pd.read_csv('../temporary/volumes_scores.csv')
 
 #Global Options
 split = 1/3
-half_century = True
+half_century = False
 
 #Legend Labels
 optimism_label = 'Optimism (Percentile)'
@@ -376,10 +376,10 @@ print('Split, high')
 for year in years:
     df = moving_volumes[year].rename(columns = rename) #Plotly is so janky that it's easier to just change the columns name than change the color legend title
 
-    v_h = df[df[industry_label] <= (1 - split)]
+    v_h = df[df[industry_label] >= (1 - split)]
     print(year)
     if len(v_h) != 0:
-        print(max(v_h[industry_label]))
+        print(min(v_h[industry_label]))
     fig = px.scatter_ternary(v_l, a = 'Religion', b = 'Political Economy', c = 'Science',
                             color = optimism_label,
                             range_color = [0,1]
