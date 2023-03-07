@@ -13,7 +13,17 @@ volumes = pd.read_csv('../temporary/volumes.csv')
 industry = pd.read_csv('../input/industry_scores.csv')
 
 if updated is True:
-    sentiment = pd.read_csv('../input/sentiment_scores_updated.csv')
+    sentiment_updated = pd.read_csv('../input/sentiment_scores_updated.csv')
+    sentiment_updated = sentiment_updated.rename(columns = {'score': 'percent_progress'})
+    sentiment_updated['HTID'] = sentiment_updated['HTID'].map(lambda x: x.rstrip('.txt')) #take out '.txt' from HTIDs
+
+
+    sentiment_old = pd.read_csv('../input/sentiment_scores.csv')
+    sentiment_old.drop(columns='percent_progress', inplace=True) #drop old progress score
+    sentiment = pd.merge(sentiment_updated, sentiment_old, on = 'HTID')
+    print(sentiment.head())
+    print(sentiment.shape)
+
 else:
     sentiment = pd.read_csv('../input/sentiment_scores.csv')
 
@@ -36,13 +46,9 @@ industry['HTID'] = industry['HTID'].map(lambda x: x.rstrip('.txt'))#remove '.txt
 
 #Clean Sentiment Data
 
-if updated is True:
-    sentiment = sentiment.rename(columns = {'score': 'optimism_score'})
-    sentiment['HTID'] = sentiment['HTID'].map(lambda x: x.rstrip('.txt'))
-else:
-    sentiment.drop(columns=['Unnamed: 0', 'key'], inplace=True)
+sentiment.drop(columns=['Unnamed: 0', 'key'], inplace=True)
 
-    sentiment['optimism_score'] = sentiment['percent_optimistic'] + sentiment['percent_progress'] - sentiment['percent_pessimism'] - sentiment['percent_regression']
+sentiment['optimism_score'] = sentiment['percent_optimistic'] + sentiment['percent_progress'] - sentiment['percent_pessimism'] - sentiment['percent_regression']
 
 
 #Merge Data
@@ -60,6 +66,12 @@ print('Finding Percentiles')
 volumes_scores['optimism_percentile'] = volumes_scores.optimism_score.rank(pct=True)
 volumes_scores['industry_2_percentile'] = volumes_scores.industry_2.rank(pct=True)
 volumes_scores['industry_3_percentile'] = volumes_scores.industry_3.rank(pct=True)
+
+#Optional Percentiles
+volumes_scores['optimistic_percentile'] = volumes_scores.percent_optimistic.rank(pct=True)
+volumes_scores['progress_percentile'] = volumes_scores.percent_progress.rank(pct=True)
+volumes_scores['pessimism_percentile'] = volumes_scores.percent_pessimism.rank(pct=True)
+volumes_scores['regression_percentile'] = volumes_scores.percent_regression.rank(pct=True)
 
 
 #Export Data

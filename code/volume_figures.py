@@ -11,7 +11,7 @@ volumes = pd.read_csv('../temporary/volumes_scores.csv')
 
 #Global Options
 split = 1/3
-half_century = False
+half_century = True
 
 #Legend Labels
 optimism_label = 'Optimism (Percentile)'
@@ -110,9 +110,14 @@ for year in years:
     df = moving_volumes[year].rename(columns = rename) #Plotly is so janky that it's easier to just change the columns name than change the color legend title
 
     print(year)
+    # fig = px.scatter_ternary(df, a = 'Religion', b = 'Political Economy', c = 'Science',
+    #                         color = 'percent_optimistic',
+    #                         range_color = [0,1]
+    #                         )
+    
     fig = px.scatter_ternary(df, a = 'Religion', b = 'Political Economy', c = 'Science',
-                            color = optimism_label,
-                            range_color = [0,1]
+                            color = 'regression_percentile',
+                            range_color=[0,1]
                             )
 
         
