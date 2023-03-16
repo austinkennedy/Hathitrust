@@ -50,6 +50,8 @@ sentiment.drop(columns=['Unnamed: 0', 'key'], inplace=True)
 
 sentiment['optimism_score'] = sentiment['percent_optimistic'] + sentiment['percent_progress'] - sentiment['percent_pessimism'] - sentiment['percent_regression']
 
+sentiment['progress_regression'] = sentiment['percent_progress'] - sentiment['percent_regression']
+
 
 #Merge Data
 print('Merging Data')
@@ -66,12 +68,11 @@ print('Finding Percentiles')
 volumes_scores['optimism_percentile'] = volumes_scores.optimism_score.rank(pct=True)
 volumes_scores['industry_2_percentile'] = volumes_scores.industry_2.rank(pct=True)
 volumes_scores['industry_3_percentile'] = volumes_scores.industry_3.rank(pct=True)
-
-#Optional Percentiles
 volumes_scores['optimistic_percentile'] = volumes_scores.percent_optimistic.rank(pct=True)
 volumes_scores['progress_percentile'] = volumes_scores.percent_progress.rank(pct=True)
 volumes_scores['pessimism_percentile'] = volumes_scores.percent_pessimism.rank(pct=True)
 volumes_scores['regression_percentile'] = volumes_scores.percent_regression.rank(pct=True)
+volumes_scores['progress_regression_percentile'] = volumes_scores.progress_regression.rank(pct=True)
 
 
 #Export Data

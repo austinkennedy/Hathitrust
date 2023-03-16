@@ -11,6 +11,9 @@ import plotly.figure_factory as ff
 import plotly.graph_objs as go
 from operator import itemgetter
 
+#Global options
+half_century = True #set to 'False' to get topic triangles for every year
+
 #Load Data
 print('Loading Data')
 moving_average_shares = pd.read_csv('../temporary/moving_average_shares.csv', index_col='Unnamed: 0')
@@ -113,6 +116,12 @@ for year in years:
     topic_shares[year]['Color'] = topic_shares[1850][['Religion','Science','Political Economy']].idxmax(axis=1) #finds highest share for each topic
 
 topic_shares[1550]
+
+
+if half_century is True:
+    years = []
+    for year in range(1550, 1891, 50):
+        years.append(year)
 
 print('Ternary Plots')
 #create and export ternary plots
