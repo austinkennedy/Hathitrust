@@ -59,6 +59,12 @@ dfs = [volumes, industry, sentiment, metadata]
 
 volumes_scores = reduce(lambda left,right: pd.merge(left, right, on = 'HTID', how = 'inner'), dfs) #merge on volume ID
 
+#export HTIDs
+
+htids = volumes_scores[['HTID', 'Year']]
+htids.to_csv('../temporary/htids.csv')
+
+
 #drop NA's
 volumes_scores = volumes_scores.dropna()
 
