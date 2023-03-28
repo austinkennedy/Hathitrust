@@ -12,6 +12,7 @@ data = pd.read_csv('../input/20191007_topics.txt', sep = '\t', lineterminator = 
 data.drop(columns = 0, inplace = True)
 data[1] = [string[string.rfind('/UK_data/')+9:-4] for string in data[1]]
 data.columns = ['HTID'] + [i for i in range(1,61)]
+print('Data dimensions:' + str(data.shape))
 
 #Function for getting cross-topic weights
 def cross_multiply(df):
