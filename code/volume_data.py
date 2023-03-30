@@ -60,9 +60,9 @@ htids = volumes_scores[['HTID', 'Year']]
 htids.to_csv('../temporary/htids.csv')
 
 
-#drop NA's
+#drop NA's and duplicates
 volumes_scores = volumes_scores.dropna()
-
+volumes_scores = volumes_scores.drop_duplicates()
 
 #Percentiles
 print('Finding Percentiles')
@@ -79,4 +79,5 @@ volumes_scores['progress_regression_percentile'] = volumes_scores.progress_regre
 #Export Data
 print('Exporting Data')
 print(volumes_scores.head())
+print('volumes_scores Dimensions:' + str(volumes_scores.shape))
 volumes_scores.to_csv('../temporary/volumes_scores.csv', index=False)
