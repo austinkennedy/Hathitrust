@@ -15,7 +15,7 @@ if (half_century == TRUE){
 
 #Find max and min scores for optimism and volume count out of subtriangles, for use in scaling legends
 percentiles <- c()
-counts <- c()
+vol_count <- c()
 
 for (year in years){
   df <- volumes %>% filter(Year >= year - 10,
@@ -23,7 +23,7 @@ for (year in years){
   
   tmp_fig <- ggtern(df, aes(x = Political.Economy, y = Religion, z = Science)) + 
     geom_tri_tern(bins=5, aes(fill = ..stat.., value = progress_percentile), fun = mean) +
-    stat_tri_tern(bins = 5, fun = mean, geom = 'point',
+    stat_tri_tern(bins = 5, geom = 'point',
                   aes(size = ..count.., value = progress_percentile),
                   color="white",
                   centroid = TRUE) +
@@ -31,12 +31,14 @@ for (year in years){
   dat <- layer_data(tmp_fig, 1)
 
   percentiles <- append(percentiles, dat$stat) #append percentiles of subtriangles to list
-  counts <- append(counts, dat$count) #append volume counts of subtriangles to list
+  vol_count <- append(vol_count, dat$count) #append volume counts of subtriangles to list
   
   
   
 }
 
+percentiles <- na.omit(percentiles)
+vol_count <- na.omit(vol_count)
 #Generate figures for paper
 
 figure_list <- list()
@@ -48,7 +50,7 @@ for (year in years){
   
   plot <- ggtern(df, aes(x = Political.Economy, y = Religion, z = Science)) +
     geom_tri_tern(bins=5, aes(fill=..stat.., value = progress_percentile), fun = mean) +
-    stat_tri_tern(bins = 5, fun = mean, geom='point',
+    stat_tri_tern(bins = 5, geom='point',
                   aes(size=..count.., progress_percentile),
                   color='white', centroid = TRUE) +
     labs(x = 'Political\nEconomy', y = "Religion", z = "Science", title = year, fill = 'Progress (Percentile)', size = "Volumes") +
@@ -62,25 +64,26 @@ for (year in years){
     scale_fill_gradient(low = "#56c7f7",high="#132B43", na.value="white",
                         limits = c(min(percentiles), max(percentiles)))+#Lighter blue
     scale_size_continuous(range = c(0,10),
-                          limits = c(min(counts), max(counts)),
+                          limits = c(1, 12500),
                           breaks = c(10, 100, 1000, 2500, 5000, 8000, 12500)) + #Set limits and breaks of volume dots
-    scale_T_continuous(limits=c(0,1.0),
-                       breaks=seq(0,1,by=0.2),
-                       labels=label) +
-    scale_L_continuous(limits=c(0.0,1),
-                       breaks=seq(0,1,by=0.2),
-                       labels=label) +
-    scale_R_continuous(limits=c(0.0,1),
-                       breaks=seq(0,1,by=0.2),
-                       labels=label)+
-    theme_dark()+
-    guides(size= guide_legend(reverse=TRUE, order = 0))+
-    theme(tern.axis.title.R = element_text(hjust=0.6))
+    
+    limit_tern(limits=c(0,1.0),
+               breaks=seq(0,1,by=0.2),
+               labels=label)+
+
+    guides(size=guide_legend(reverse=TRUE, order = 0),
+           fill = guide_colorbar(title = 'yo mama',
+                                 limits = c(0,1),
+                                 breaks = seq(0,1,by=0.25)))+
+    theme(tern.axis.title.R = element_text(hjust=0.6, vjust = 0.9), tern.axis.title.L = element_text(hjust = 0.3, vjust = 0.9))+
+    theme_dark()
   
   show(plot)
   # tmp <- ggplotGrob(plot)
 
-  figure_list[[toString(year)]] <- plot
+  # figure_list[[toString(year)]] <- plot
+  path <- sprintf('../output/subtriangles/%s.png', year)
+  ggsave(path, width = 6.5, height = 4.5)
 }
 
 fig <- wrap_plots(figure_list, ncol = 2, nrow = 4) + plot_layout(widths = c(1,15,5), guides = "collect") & theme(legend.position = "right")
