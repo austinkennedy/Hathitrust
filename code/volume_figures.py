@@ -140,18 +140,22 @@ def ternary_plots(data, color, path, legend_title, years = years, grayscale = Fa
                         )
         
         if grayscale is True:
-            fig.update_layout(coloraxis = {'colorscale':'gray_r'})
+            fig.update_layout(coloraxis = {'colorscale':'gray'})
 
         fig.update_traces(
             showlegend = False
         )
 
-        if year == 1850:   
-            fig.write_image(path + str(year) + '.png', width=900) #included because wider format needed for color scale
+        # if year == 1850:   
+        #     fig.write_image(path + str(year) + '.png', width=900) #included because wider format needed for color scale
         
-        else:
-            fig.update(layout_coloraxis_showscale=False) #removes colorbar
-            fig.write_image(path + str(year) + '.png') #only works with kaleido 0.1.0 for some reason, use 'conda install python-kaleido=0.1.0post1' on PC, also uses plotly 5.10.0
+        # else:
+        #     fig.update(layout_coloraxis_showscale=False) #removes colorbar
+        #     fig.write_image(path + str(year) + '.png') #only works with kaleido 0.1.0 for some reason, use 'conda install python-kaleido=0.1.0post1' on PC, also uses plotly 5.10.0
+        
+        # Uncomment for no legend at all
+        fig.update(layout_coloraxis_showscale=False) #removes colorbar
+        fig.write_image(path + str(year) + '.png') #only works with kaleido 0.1.0 for some reason, use 'conda install python-kaleido=0.1.0post1' on PC, also uses plotly 5.10.0
 
 
 print('Progress Triangles, color')
