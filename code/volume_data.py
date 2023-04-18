@@ -32,15 +32,17 @@ print('Cleaning Data')
 industry = industry.rename(columns={'Unnamed: 0': 'HTID', '2-vote':'industry_2','3-vote':'industry_3'})
 industry['HTID'] = industry['HTID'].map(lambda x: x.rstrip('.txt'))#remove '.txt' at the end of each string for HTIDs
 
-#Clean Sentiment Data
-
 sentiment = sentiment.rename(columns = {'Unnamed: 0': 'HTID', 'Regression': 'percent_regression', 'Pessimism': 'percent_pessimism', 'Optimism':'percent_optimistic', 'Progress': 'percent_progress'})
 
+#Clean Sentiment Data
 sentiment['HTID'] = sentiment['HTID'].map(lambda x: x.rstrip('.txt')) #remove '.txt' at the end of each string for HTIDs
+
 
 sentiment['optimism_score'] = sentiment['percent_optimistic'] + sentiment['percent_progress'] - sentiment['percent_pessimism'] - sentiment['percent_regression']
 
 sentiment['progress_regression'] = sentiment['percent_progress'] - sentiment['percent_regression']
+
+
 
 
 #Merge Data
