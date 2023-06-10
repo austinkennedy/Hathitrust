@@ -11,7 +11,8 @@ print('Loading Data')
 volumes = pd.read_csv('../temporary/volumes.csv')
 industry = pd.read_csv('../input/industry_scores.csv')
 sentiment = pd.read_csv('../input/sentiment_scores_march23.csv')
-print(sentiment.head())
+updated_progress = pd.read_csv('../input/updated_progress_scores.csv')
+print(updated_progress.head())
 
 
 
@@ -32,26 +33,32 @@ print('Cleaning Data')
 industry = industry.rename(columns={'Unnamed: 0': 'HTID', '2-vote':'industry_2','3-vote':'industry_3'})
 industry['HTID'] = industry['HTID'].map(lambda x: x.rstrip('.txt'))#remove '.txt' at the end of each string for HTIDs
 
-sentiment = sentiment.rename(columns = {'Unnamed: 0': 'HTID', 'Regression': 'percent_regression', 'Pessimism': 'percent_pessimism', 'Optimism':'percent_optimistic', 'Progress': 'percent_progress'})
+sentiment = sentiment.rename(columns = {'Unnamed: 0': 'HTID', 'Regression': 'percent_regression', 'Pessimism': 'percent_pessimism', 'Optimism':'percent_optimistic', 'Progress': 'percent_progress_original'})
 
 #Clean Sentiment Data
 sentiment['HTID'] = sentiment['HTID'].map(lambda x: x.rstrip('.txt')) #remove '.txt' at the end of each string for HTIDs
 
 
-sentiment['optimism_score'] = sentiment['percent_optimistic'] + sentiment['percent_progress'] - sentiment['percent_pessimism'] - sentiment['percent_regression']
+sentiment['optimism_score'] = sentiment['percent_optimistic'] + sentiment['percent_progress_original'] - sentiment['percent_pessimism'] - sentiment['percent_regression']
 
-sentiment['progress_regression'] = sentiment['percent_progress'] - sentiment['percent_regression']
+sentiment['progress_regression'] = sentiment['percent_progress_original'] - sentiment['percent_regression']
 
+#Clean updated progress data
+updated_progress = updated_progress.rename(columns={'Unnamed: 0': 'HTID', 'Main': 'percent_progress_main', 'Secondary': 'percent_progress_secondary'})
 
+updated_progress['HTID'] = updated_progress['HTID'].map(lambda x: x.rstrip('.txt'))
+
+print(updated_progress.head())
 
 
 #Merge Data
 print('Merging Data')
-dfs = [volumes, industry, sentiment, metadata]
+dfs = [volumes, industry, sentiment, metadata, updated_progress]
 
 print('Volumes Dimensions:' + str(volumes.shape))
 print('Sentiment Dimensions:' + str(sentiment.shape))
 print('Industry Dimensions:' + str(industry.shape))
+print('Updated Progress Dimensions:' + str(updated_progress.shape))
 
 volumes_scores = reduce(lambda left,right: pd.merge(left, right, on = 'HTID', how = 'inner'), dfs) #merge on volume ID
 
@@ -72,10 +79,12 @@ volumes_scores['optimism_percentile'] = volumes_scores.optimism_score.rank(pct=T
 volumes_scores['industry_2_percentile'] = volumes_scores.industry_2.rank(pct=True)
 volumes_scores['industry_3_percentile'] = volumes_scores.industry_3.rank(pct=True)
 volumes_scores['optimistic_percentile'] = volumes_scores.percent_optimistic.rank(pct=True)
-volumes_scores['progress_percentile'] = volumes_scores.percent_progress.rank(pct=True)
+volumes_scores['progress_percentile_original'] = volumes_scores.percent_progress_original.rank(pct=True)
 volumes_scores['pessimism_percentile'] = volumes_scores.percent_pessimism.rank(pct=True)
 volumes_scores['regression_percentile'] = volumes_scores.percent_regression.rank(pct=True)
 volumes_scores['progress_regression_percentile'] = volumes_scores.progress_regression.rank(pct=True)
+volumes_scores['progress_percentile_main'] = volumes_scores.percent_progress_main.rank(pct=True)
+volumes_scores['progress_percentile_secondary'] = volumes_scores.percent_progress_secondary.rank(pct=True)
 
 
 #Export Data
