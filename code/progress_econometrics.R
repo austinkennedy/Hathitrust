@@ -44,8 +44,10 @@ volumes <- volumes %>%
 #Regressions
 reference = min(bins)
 
+econometrics <- function(progress_percentile){
+  
 #Uses feols to carry clustered SEs throughout
-mod <- feols(progress_percentile ~ Science 
+mod <- feols(.[progress_percentile] ~ Science 
              + Political.Economy 
              + Science*Political.Economy 
              + Science*Religion 
@@ -285,9 +287,9 @@ show(figure)
 ggsave("../output/regression_figures/progress/marginal_predicted_combined.png", width = 13.5)
 
 
+}
 
-
-
+econometrics('progress_percentile_original')
 
 
 
