@@ -38,10 +38,8 @@ sentiment = sentiment.rename(columns = {'Unnamed: 0': 'HTID', 'Regression': 'per
 #Clean Sentiment Data
 sentiment['HTID'] = sentiment['HTID'].map(lambda x: x.rstrip('.txt')) #remove '.txt' at the end of each string for HTIDs
 
-
+#NEED TO CHANGE IF YOU WANT TO INCORPORATE DIFFERENT PROGRESS SCORES
 sentiment['optimism_score'] = sentiment['percent_optimistic'] + sentiment['percent_progress_original'] - sentiment['percent_pessimism'] - sentiment['percent_regression']
-
-sentiment['progress_regression'] = sentiment['percent_progress_original'] - sentiment['percent_regression']
 
 #Clean updated progress data
 updated_progress = updated_progress.rename(columns={'Unnamed: 0': 'HTID', 'Main': 'percent_progress_main', 'Secondary': 'percent_progress_secondary'})
@@ -73,6 +71,12 @@ htids.to_csv('../temporary/htids.csv')
 volumes_scores = volumes_scores.dropna()
 volumes_scores = volumes_scores.drop_duplicates()
 
+volumes_scores['progress_regression_original'] = volumes_scores['percent_progress_original'] - volumes_scores['percent_regression']
+
+volumes_scores['progress_regression_main'] = volumes_scores['percent_progress_main'] - volumes_scores['percent_regression']
+
+volumes_scores['progress_regression_secondary'] = volumes_scores['percent_progress_secondary'] - volumes_scores['percent_regression']
+
 #Percentiles
 print('Finding Percentiles')
 volumes_scores['optimism_percentile'] = volumes_scores.optimism_score.rank(pct=True)
@@ -80,15 +84,19 @@ volumes_scores['industry_2_percentile'] = volumes_scores.industry_2.rank(pct=Tru
 volumes_scores['industry_3_percentile'] = volumes_scores.industry_3.rank(pct=True)
 volumes_scores['optimistic_percentile'] = volumes_scores.percent_optimistic.rank(pct=True)
 volumes_scores['progress_percentile_original'] = volumes_scores.percent_progress_original.rank(pct=True)
-volumes_scores['pessimism_percentile'] = volumes_scores.percent_pessimism.rank(pct=True)
-volumes_scores['regression_percentile'] = volumes_scores.percent_regression.rank(pct=True)
-volumes_scores['progress_regression_percentile'] = volumes_scores.progress_regression.rank(pct=True)
 volumes_scores['progress_percentile_main'] = volumes_scores.percent_progress_main.rank(pct=True)
 volumes_scores['progress_percentile_secondary'] = volumes_scores.percent_progress_secondary.rank(pct=True)
+volumes_scores['pessimism_percentile'] = volumes_scores.percent_pessimism.rank(pct=True)
+volumes_scores['regression_percentile'] = volumes_scores.percent_regression.rank(pct=True)
+volumes_scores['progress_regression_percentile_original'] = volumes_scores.progress_regression_original.rank(pct=True)
+volumes_scores['progress_regression_percentile_main'] = volumes_scores.progress_regression_main.rank(pct=True)
+volumes_scores['progress_regression_percentile_secondary'] = volumes_scores.progress_regression_secondary.rank(pct=True)
+
 
 
 #Export Data
 print('Exporting Data')
 print(volumes_scores.head())
+print(volumes_scores.columns)
 print('volumes_scores Dimensions:' + str(volumes_scores.shape))
 volumes_scores.to_csv('../temporary/volumes_scores.csv', index=False)

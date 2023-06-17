@@ -44,8 +44,11 @@ volumes <- volumes %>%
 #Regressions
 reference = min(bins)
 
-econometrics <- function(progress_percentile){
-  
+# econometrics <- function(progress_percentile){
+progress_vars <- list('progress_percentile_original', 'progress_percentile_main', 'progress_percentile_secondary')
+
+
+for (progress_percentile in progress_vars){
 #Uses feols to carry clustered SEs throughout
 mod <- feols(.[progress_percentile] ~ Science 
              + Political.Economy 
@@ -61,7 +64,7 @@ mod <- feols(.[progress_percentile] ~ Science
              - Religion 
              + Year, data = volumes, cluster = c("Year"))
 
-summary(mod)
+print(summary(mod))
 
 estimates <- tibble::rownames_to_column(as.data.frame(mod$coeftable), "coefficient")
 
@@ -154,6 +157,29 @@ coef_omitted <- "Year"
 
 modelsummary(models, stars = TRUE)
 
+reg_path <- paste('../output/regression_tables/', progress_percentile, sep = '')
+
+# Define the content of the .gitignore file
+content <- "*
+*/
+!.gitignore"
+
+# Create the full file path
+file_path <- file.path(reg_path, ".gitignore")
+
+
+
+if (!dir.exists(reg_path)){
+  dir.create(reg_path)
+  
+  #Write .gitignore
+  file <- file(file_path)
+  writeLines(content, file)
+  close(file)
+  print('directory created')
+}else{
+  print("dir exists")
+}
 
 modelsummary(models,
              stars = TRUE,
@@ -163,7 +189,7 @@ modelsummary(models,
              escape = FALSE,
              threeparttable = TRUE,
              notes = note,
-             output="../output/regression_tables/progress/progress_results.tex"
+             output=paste(reg_path, '/results.tex', sep = '')
 )
 
 #Marginal effects
@@ -174,9 +200,14 @@ bins <- as_factor(bins)#gives 'margins' input values
 
 #Use lm() to be compatible with 'margins' package
 
-model <- lm(progress_percentile ~ Religion * Science * bin + Religion * Political.Economy * bin + Science * Political.Economy * bin - Religion - Religion * bin + Political.Economy + bin + Year, volumes)
+rhs <- '~ Religion * Science * bin + Religion * Political.Economy * bin + Science * Political.Economy * bin - Religion - Religion * bin + Political.Economy + bin + Year'
 
-summary(model)
+fml <- as.formula(paste(progress_percentile, rhs))
+
+
+model <- lm(fml, volumes)
+
+print(summary(model))
 
 summary(mod)
 
@@ -193,6 +224,8 @@ get_marginal_science <- function(model, s, r, p){
   
   return(tmp)
 }
+
+print("Calculating Marginal Effects, may take a while")
 
 s100_m <- get_marginal_science(model = model, s = 1, r = 0, p = 0)
 s50r50_m <- get_marginal_science(model = model, s = 0.5, r = 0.5, p = 0)
@@ -217,7 +250,10 @@ marg <- rbind(s100_m, s50r50_m, s50p50_m, thirds_m, r50p50_m)
 #export/import since computation takes a while
 write.csv(marg, "../temporary/marginal_main.csv")
 
-marg <- read.csv("../temporary/marginal_main.csv")
+write.csv(marg, paste('../temporary/marginal_', progress_percentile, '.csv', sep = ''))
+
+
+marg <- read.csv(paste('../temporary/marginal_', progress_percentile, '.csv', sep = ''))
 # 
 
 marg$bin <- as.numeric(as.character(marg$bin))
@@ -233,7 +269,24 @@ marginal_fig <- ggplot(marg, aes(x = bin, y = AME, group = label)) +
 
 show(marginal_fig)
 
-ggsave("../output/regression_figures/progress/marginal_effects.png", width = 5.5)
+path <- paste('../output/regression_figures/', progress_percentile, sep='')
+
+# Create the full file path for .gitignore
+file_path_figs <- file.path(path, ".gitignore")
+
+if (!dir.exists(path)){
+  dir.create(path)
+  
+  #Write .gitignore
+  file <- file(file_path_figs)
+  writeLines(content, file)
+  close(file)
+  print('directory created')
+}else{
+  print("dir exists")
+}
+
+ggsave(paste(path, '/marginal_effects.png', sep=''), width = 5.5)
 
 #Predicted Values
 bins_numeric <- as.numeric(levels(bins))
@@ -277,23 +330,15 @@ predicted_fig <- ggplot(predicted, aes(x = bin, y = fit, group = label)) +
 
 show(predicted_fig)
 
-ggsave("../output/regression_figures/progress/predicted_values.png", width = 8)
+ggsave(paste(path, '/predicted_values.png', sep=''), width = 8)
 
 figure <- ggarrange(marginal_fig, predicted_fig,
                     labels = c("A", "B"),
                     ncol = 2, nrow =1,
                     widths = c(5.5,8))
 show(figure)
-ggsave("../output/regression_figures/progress/marginal_predicted_combined.png", width = 13.5)
-
+ggsave(paste(path, '/marginal_predicted_combined.png', sep=''), width = 13.5)
 
 }
-
-econometrics('progress_percentile_original')
-
-
-
-
-
 
 

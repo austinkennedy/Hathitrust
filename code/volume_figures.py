@@ -229,14 +229,14 @@ ternary_plots(data = moving_volumes,
 
 print('Size based, increasing')
 ternary_plots(data = moving_volumes,
-              color = 'progress_percentile',
+              color = 'progress_percentile_main',
               size = 'industry_3_percentile',
               legend_title='Progress (Percentile)',
               filepath = '../output/volume_triangles/industry_optimism/increasing_scale/')
 
 print('Size based, decreasing')
 ternary_plots(data = moving_volumes,
-              color = 'progress_percentile',
+              color = 'progress_percentile_main',
               size = 'industry_3_percentile',
               legend_title='Progress (Percentile)',
               decreasing_scale=True,
@@ -244,12 +244,20 @@ ternary_plots(data = moving_volumes,
 
 
 
-print('Progress minus regression')
+print('Progress minus regression, original')
 ternary_plots(data=moving_volumes,
-              color='progress_regression_percentile',
+              color='progress_regression_percentile_original',
               legend_title='Progress - Regression (Percentile)',
-              filepath = '../output/volume_triangles/progress_regression/')
+              filepath = '../output/volume_triangles/progress_regression_original/')
 
-
+print('Progress minus regression, main')
+ternary_plots(data=moving_volumes,
+              color='progress_regression_percentile_main',
+              legend_title='Progress - Regression (Percentile)',
+              filepath = '../output/volume_triangles/progress_regression_main/')
  
-
+print('Progress minus regression, secondary')
+ternary_plots(data=moving_volumes,
+              color='progress_regression_percentile_secondary',
+              legend_title='Progress - Regression (Percentile)',
+              filepath = '../output/volume_triangles/progress_regression_secondary/')
