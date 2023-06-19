@@ -51,7 +51,7 @@ volumes <- volumes %>%
 #model
 reference = min(bins)
 
-mod <- feols(progress_percentile ~ Science +
+mod <- feols(progress_percentile_main ~ Science +
                Political.Economy +
                industry_percentile +
                Science*Political.Economy +
@@ -197,7 +197,7 @@ volumes$bin <- as.factor(volumes$bin)
 bins <- as.factor(bins)
 
 
-model <- lm(progress_percentile ~ Religion * Science * industry_percentile * bin 
+model <- lm(progress_percentile_main ~ Religion * Science * industry_percentile * bin 
             + Religion * Political.Economy * industry_percentile * bin 
             + Science * Political.Economy * industry_percentile * bin 
             - Religion * industry_percentile * bin

@@ -130,7 +130,7 @@ def ternary_plots(data, color, filepath, legend_title, years = years, grayscale 
                         font_size=20,
                         margin_l = 110,
                         legend_title_side = 'top',
-                        coloraxis_colorbar_title_text = legend_title,
+                        coloraxis_colorbar_title_text = 'Percentile',
                         coloraxis_colorbar_title_side = 'top'
                         )
         
@@ -259,5 +259,5 @@ ternary_plots(data=moving_volumes,
 print('Progress minus regression, secondary')
 ternary_plots(data=moving_volumes,
               color='progress_regression_percentile_secondary',
-              legend_title='Progress - Regression (Percentile)',
+              legend_title='Progress - Regression',
               filepath = '../output/volume_triangles/progress_regression_secondary/')
