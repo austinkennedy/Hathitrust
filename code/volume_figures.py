@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import plotly.express as px
 import os
+import statistics
 plt.style.use('seaborn-white')
 
 print('Loading Data')
@@ -30,7 +31,18 @@ def category_averages(data, year, category):
     tmp = pd.DataFrame(means, columns=cols.columns)
     tmp['Year'] = year
     tmp['Volumes'] = len(cat_vols)
-    return tmp    
+    return tmp   
+
+def make_dir(path):
+            #check if directory in path exists, if not create it
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+        # Create .gitignore file
+        gitignore_path = os.path.join(path, ".gitignore")
+        with open(gitignore_path, "w") as gitignore_file:
+            gitignore_file.write("*\n*/\n!.gitignore\n")
+        print(f".gitignore file created.") 
 
 #Categorize Volumes
 volumes['Category'] = volumes[['Religion','Science','Political Economy']].idxmax(axis=1) #Finds highest share for each topic
@@ -45,6 +57,7 @@ volumes_time = {key: [] for key in categories}
 
 volume_count = {}
 moving_volumes = {}
+avg_progress = {}
 
 print('Getting Category Averages')
 #Get averages for volumes in category
@@ -55,6 +68,7 @@ for year in years:
 
     volume_count[year] = len(df)
     moving_volumes[year] = df
+    avg_progress[year] = statistics.mean(df['progress_percentile_main'])
 
 for category in categories:
     volumes_time[category] = pd.concat(volumes_time[category])
@@ -92,6 +106,22 @@ ax1.set_yticklabels(["0", "25,000", "50,000", "75,000"])
 plt.ylim([0,75000])
 fig.savefig('../output/volumes_over_time/total_volumes.png', dpi = 200)
 
+#Average Sentiment Over Time
+progress = pd.DataFrame(avg_progress.items(), columns=['Year', 'avg_progress'])
+
+fig, (ax1) = plt.subplots(1,1)
+ax1.plot(progress['Year'], progress['avg_progress'], color = 'crimson', label = 'Average Progress Score (Percentile)')
+ax1.legend(loc = 'upper right')
+ax1.set_xlabel('Year')
+ax1.set_yticks([0,0.25,0.5,0.75,1])
+filepath = '../output/volumes_over_time/'
+make_dir(filepath)
+fig.savefig(filepath + 'avg_progress.png', dpi = 200)
+
+
+
+
+
 #Ternary plots
 
 if half_century is True:
@@ -99,7 +129,7 @@ if half_century is True:
     for year in range(1550, 1891, 50):
         years.append(year)
 
-def ternary_plots(data, color, filepath, legend_title, years = years, grayscale = False, size = None, decreasing_scale = False):
+def ternary_plots(data, color, filepath, legend_title, years = years, grayscale = False, size = None, decreasing_scale = False, show_legend = True):
     #'data' needs to be a dictionary of dataframes, with volumes as rows, and columns 'Religion', 'Political Economy', and 'Science'
     #'color': which variable color of dots will be based on
     #'path': directory to save output figures
@@ -148,16 +178,9 @@ def ternary_plots(data, color, filepath, legend_title, years = years, grayscale 
         )
 
         #check if directory in path exists, if not create it
-        if not os.path.exists(filepath):
-            os.makedirs(filepath)
+        make_dir(path = filepath)
 
-            # Create .gitignore file
-            gitignore_path = os.path.join(filepath, ".gitignore")
-            with open(gitignore_path, "w") as gitignore_file:
-                gitignore_file.write("*\n*/\n!.gitignore\n")
-            print(f".gitignore file created.")
-
-        if year == 1850:   
+        if year == 1850 and show_legend is True:   
             fig.write_image(filepath + str(year) + '.png', width=900) #included because wider format needed for color scale
         
         else:
@@ -232,6 +255,7 @@ ternary_plots(data = moving_volumes,
               color = 'progress_percentile_main',
               size = 'industry_3_percentile',
               legend_title='Progress (Percentile)',
+              show_legend = False,
               filepath = '../output/volume_triangles/industry_optimism/increasing_scale/')
 
 print('Size based, decreasing')
@@ -261,3 +285,4 @@ ternary_plots(data=moving_volumes,
               color='progress_regression_percentile_secondary',
               legend_title='Progress - Regression',
               filepath = '../output/volume_triangles/progress_regression_secondary/')
+
