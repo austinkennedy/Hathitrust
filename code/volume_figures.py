@@ -250,6 +250,20 @@ ternary_plots(data = moving_volumes,
               filepath = '../output/volume_triangles/industry/grayscale/',
               grayscale=True)
 
+
+print('Industry Triangles (1643), color')
+ternary_plots(data = moving_volumes,
+              color = 'industry_1643_percentile',
+              legend_title='Industry (Percentile)',
+              filepath = '../output/volume_triangles/industry_1643/color/')
+
+print('Industry Triangles (1643), grayscale')
+ternary_plots(data = moving_volumes,
+              color = 'industry_1643_percentile',
+              legend_title='Industry (Percentile)',
+              filepath = '../output/volume_triangles/industry_1643/grayscale/',
+              grayscale=True)
+
 print('Size based, increasing')
 ternary_plots(data = moving_volumes,
               color = 'progress_percentile_main',
@@ -266,6 +280,22 @@ ternary_plots(data = moving_volumes,
               decreasing_scale=True,
               filepath = '../output/volume_triangles/industry_optimism/decreasing_scale/')
 
+print('Size based, increasing, 1643')
+ternary_plots(data = moving_volumes,
+              color = 'progress_percentile_main',
+              size = 'industry_1643_percentile',
+              legend_title='Progress (Percentile)',
+              show_legend = False,
+              filepath = '../output/volume_triangles/industry_optimism_1643/increasing_scale/')
+
+print('Size based, decreasing, 1643')
+ternary_plots(data = moving_volumes,
+              color = 'progress_percentile_main',
+              size = 'industry_1643_percentile',
+              legend_title='Progress (Percentile)',
+              decreasing_scale=True,
+              show_legend = False,
+              filepath = '../output/volume_triangles/industry_optimism_1643/decreasing_scale/')
 
 
 print('Progress minus regression, original')
