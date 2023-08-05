@@ -45,11 +45,19 @@ volumes <- volumes %>%
   filter(Year > min_year)
 
 #rename
-volumes <- volumes %>%
-  rename(c("industry_percentile" = sprintf("industry_%i_percentile", vote_threshold))) #implement vote threshold
+# volumes <- volumes %>%
+#   rename(c("industry_percentile" = sprintf("industry_%i_percentile", vote_threshold))) #implement vote threshold
 
 #model
 reference = min(bins)
+
+industry_vars <- list('industry_3_percentile', 'industry_1643_percentile')
+
+for (ind in industry_vars){
+  
+volumes$industry_percentile <- volumes[[ind]]
+
+#iterate through industry score versions
 
 mod <- feols(progress_percentile_main ~ Science +
                Political.Economy +
@@ -77,7 +85,7 @@ mod <- feols(progress_percentile_main ~ Science +
                i(bin, Religion*Political.Economy*industry_percentile, reference) +
                i(bin, ref = reference) -
                Religion -
-               Religion*industry_percentile +
+               Religion*industry_percentile+
                industry_percentile +
                Year,
              data = volumes, cluster = c("Year"))
@@ -181,14 +189,39 @@ modelsummary(models,
              coef_omit = "Year",
              stars = TRUE)
 
+reg_path <- paste('../output/regression_tables/', ind, sep = '')
+
+# Define the content of the .gitignore file
+content <- "*
+*/
+!.gitignore"
+
+# Create the full file path
+file_path <- file.path(reg_path, ".gitignore")
+
+
+
+if (!dir.exists(reg_path)){
+  dir.create(reg_path)
+  
+  #Write .gitignore
+  file <- file(file_path)
+  writeLines(content, file)
+  close(file)
+  print('directory created')
+}else{
+  print("dir exists")
+}
+
 modelsummary(models,
              stars = TRUE,
              coef_rename = cm,
              coef_omit = coef_omitted,
+             title = 'Dependent Variable: Progress Percentile',
              escape = FALSE,
              threeparttable = TRUE,
              notes = note,
-             output = "../output/regression_tables/industry/industry_results.tex")
+             output=paste(reg_path, '/results.tex', sep = ''))
 
 #Predicted Values
 
@@ -293,5 +326,25 @@ figure <- ggarrange(predicted_fig_0, predicted_fig_1,
                     widths = c(5.5,8))
 show(figure)
 
-ggsave("../output/regression_figures/industry/predicted_values_same_scale.png", width = 13.5)
+path <- paste('../output/regression_figures/', ind, sep='')
+
+# Create the full file path for .gitignore
+file_path_figs <- file.path(path, ".gitignore")
+
+if (!dir.exists(path)){
+  dir.create(path)
+  
+  #Write .gitignore
+  file <- file(file_path_figs)
+  writeLines(content, file)
+  close(file)
+  print('directory created')
+}else{
+  print("dir exists")
+}
+
+ggsave(paste(path, '/predicted_values.png', sep =''), width = 13.5)
+
+}
+
 
