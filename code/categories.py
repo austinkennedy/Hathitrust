@@ -1,33 +1,23 @@
 #import packages
 print('Loading Packages')
-import os
 import pandas as pd
 import itertools
 from iteration_utilities import unique_everseen
 from math import comb
+import config
 
 #Load Data
 print('Loading Data')
 volume_weights = pd.read_csv("../temporary/topic_weights.csv")
 cross = pd.read_csv('../temporary/cross_topics.csv')
-topics = pd.read_csv('../input/20191007_keys.txt', sep = '\t', lineterminator='\n', header=None)
-
-volume_weights_pre1750 = pd.read_csv('../temporary/topic_weights_pre1750.csv')
-cross_pre1750 = pd.read_csv('../temporary/cross_topics_pre1750.csv')
-topics_pre1750 = pd.read_csv('../input/20230623_keys.txt', sep = '\t', lineterminator='\n', header=None)
+topics = pd.read_csv(config.topic_info, sep = '\t', lineterminator='\n', header=None)
 
 #fix topic numbers
 topics.drop(columns=0, inplace=True)
-topics_pre1750.drop(columns=0, inplace=True)
 
 topics['topic_number'] = list(range(1,len(topics)+1))
-topics_pre1750['topic_number'] = list(range(1, len(topics_pre1750) +1))
 
 print(topics)
-print(topics_pre1750)
-
-group = [5,9,22,26,35,46,50,55,60] #innocuous topics to be eliminated
-group_pre1750 = [2,19,26,28,35,52] #innocuous topics to be eliminated
 
 #functions
 def cross_share(data):
@@ -108,25 +98,19 @@ def distinct_categories(data):
 
 print('Calculating shares')
 shares_all = cross_share(cross)
-shares_pre1750 = cross_share(cross_pre1750)
 
 print('Getting categories')
-clusters = get_shares(shares = shares_all, top = topics, omit = group, length = 3)
-clusters_pre1750 = get_shares(shares = shares_pre1750, top = topics_pre1750, omit = group_pre1750, length = 3)
+clusters = get_shares(shares = shares_all, top = topics, omit = config.eliminated_topics, length = 3)
 
 print('Exporting Categories')
-clusters.to_csv('../temporary/clusters.txt', index = False)
-clusters_pre1750.to_csv('../temporary/clusters_pre1750.txt', index = False)
+clusters.to_csv('../temporary/clusters.csv', index = False)
 
 print('Finding distinct categories')
 clusters_corpus = distinct_categories(clusters)
-clusters_corpus_pre1750 = distinct_categories(clusters_pre1750)
 print(clusters_corpus)
-print(clusters_corpus_pre1750)
 
 print('Exporting Topics')
-topics.to_csv('../temporary/topics.txt', index=False)
-topics_pre1750.to_csv('../temporary/topics_pre1750.txt', index=False)
+topics.to_csv('../temporary/topics.csv', index=False)
 
 
 

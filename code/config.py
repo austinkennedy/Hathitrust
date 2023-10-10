@@ -1,5 +1,11 @@
 #raw volume data, with scores for each of the 60 topics
+#trained on full sample
 raw_topic_scores = '../input/20191007_topics.txt'
+
+
+#Allows for data cleaning specific to the dataset
+pre_1750 = False
+
 
 #topics themselves
 topic_info = '../input/20191007_keys.txt'
@@ -19,3 +25,48 @@ categories = {
 half_century = True
 
 output_folder = '../output/full_sample/'
+
+
+
+
+
+# ##Uncomment this section for pre_1750 sample
+
+# #raw volume data, with scores for each of the 60 topics
+# #trained on full sample
+# raw_topic_scores = '../input/20230921_infer_topics.txt'
+
+
+# #Allows for data cleaning specific to the dataset
+# pre_1750 = True
+
+
+# #topics themselves
+# topic_info = '../input/20230623_keys.txt'
+
+# #innocuous topics to be eliminated
+# eliminated_topics = [2,19,26,28,35,52]
+
+# #check before running 'topic_volume_weights.py'. The classification of the output from 'categories.py' into 'Religion', 'Science', and 'Political Economy' is subjective and needs to be manually classified.
+
+# categories = {
+#     'Religion':[3,16,53],
+#     'Science':[11,46,60],
+#     'Political Economy':[1,15,30]
+# }
+
+# #set to 'False' to get triangle plots for every year instead of every half-century
+# half_century = True
+
+# output_folder = '../output/pre1750/'
+
+
+
+
+
+
+
+
+
+
+
