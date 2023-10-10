@@ -7,6 +7,8 @@ import pickle
 print('Loading Data')
 #Load Data
 cross = pd.read_csv('../temporary/cross_topics.csv')
+cross_pre1750 = pd.read_csv('../temporary/cross_topics_pre1750.csv')
+
 
 metapath = '../input/metadata.p'
 metadata = pickle.load(open(metapath, 'rb'))
@@ -21,6 +23,8 @@ metadata['HTID'] = metadata.apply(fix_htid, axis=1)
 #merge years onto volumes
 cross = pd.merge(cross, metadata, on='HTID', how='inner').drop(columns = ['oclc', 'Year'])
 cross
+
+cross_pre1750 = pd.merge(cross_pre1750, metadata, on = 'HTID', how = 'inner').drop(columns=['oclc','Year'])
 
 #create sequence of years
 years=[]
@@ -45,9 +49,23 @@ ct_shares = {}
 for year in years:
     ct_shares[year] = moving_shares(cross, year)
 
+ct_shares_pre1750 = {}
+for year in years:
+    ct_shares_pre1750[year] = moving_shares(cross_pre1750, year)
+
 
 moving_average_shares = pd.DataFrame.from_dict(ct_shares)
+moving_average_shares_pre1750 = pd.DataFrame.from_dict(ct_shares_pre1750)
 
 print('Exporting data')
 print(moving_average_shares.head())
 moving_average_shares.to_csv('../temporary/moving_average_shares.csv', index=True)
+
+print(moving_average_shares_pre1750.head())
+moving_average_shares_pre1750.to_csv('../temporary/moving_average_shares_pre1750.csv', index = True)
+
+#export fixed metadata
+metadata.to_csv('../temporary/metadata.csv')
+
+
+

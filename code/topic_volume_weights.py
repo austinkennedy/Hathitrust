@@ -20,25 +20,31 @@ moving_average_shares = pd.read_csv('../temporary/moving_average_shares.csv', in
 topics = pd.read_csv('../temporary/topics.csv')
 volume_topics = pd.read_csv('../temporary/topic_weights.csv')
 
+moving_average_shares_pre1750 = pd.read_csv('../temporary/moving_average_shares_pre1750.csv', index_col='Unnamed: 0')
+topics_pre1750 = pd.read_csv('../temporary/topics_pre1750.csv')
+volume_topics_pre1750 = pd.read_csv('../temporary/topic_weights_pre1750.csv')
+
 #volume metadata
-metapath = '../input/metadata.p'
-metadata = pickle.load(open(metapath, 'rb'))
-
-metadata['Year_rounded'] = pd.to_numeric(metadata['Year'])
-metadata['Year'] = pd.to_numeric(metadata['Year'], downcast='signed')
-def fix_htid(row):
-    return row['HTID'].replace(":","+").replace("/", "=")
-
-metadata['HTID'] = metadata.apply(fix_htid, axis=1)
+metadata = pd.read_csv('../temporary/metadata.csv')
 
 #match volume years and fix to be compatible with category weights
 volume_topics = pd.merge(volume_topics, metadata, on = 'HTID', how = 'inner').drop(columns=['oclc','Year'])
+volume_topics_pre1750 = pd.merge(volume_topics_pre1750, metadata, on = 'HTID', how = 'inner').drop(columns=['oclc', 'Year'])
 
-for ind,row in volume_topics.iterrows():
-    if row['Year_rounded'] > 1890:
-        volume_topics.at[ind, 'Year_rounded'] = 1890
-    elif row['Year_rounded'] < 1510:
-        volume_topics.at[ind, 'Year_rounded'] = 1510
+def fix_years(df):
+    for ind,row in df.iterrows():
+        if row['Year_rounded'] > 1890:
+            df.at[ind, 'Year_rounded'] = 1890
+        elif row['Year_rounded'] < 1510:
+            df.at[ind, 'Year_rounded'] = 1510
+
+    return df
+
+volume_topics = fix_years(volume_topics)
+volume_topics_pre1750 = fix_years(volume_topics_pre1750)
+
+print(max(volume_topics['Year_rounded']))
+print(min(volume_topics_pre1750['Year_rounded']))
 
 #Functions
 def category_shares(topics, ctshares, year, categories):
@@ -75,6 +81,13 @@ categories = {
     'Political Economy':[33,34,47]
     }
 
+#output of categories.py and substitution of a couple topics for 'Science'. Classification into labels is subjective. For robustness.
+categories_pre1750 = {
+    'Religion':[3,16,53],
+    'Science':[11,46,60],
+    'Political Economy':[1,15,30]
+}
+
 years=[]
 for year in range(1510,1891):
     years.append(year)
@@ -82,9 +95,12 @@ for year in range(1510,1891):
 print('Getting topic scores')
 #get topic category scores for every year
 topic_shares = {}
+topic_shares_pre1750 = {}
 
 for year in years:
     topic_shares[year] = category_shares(topics = topics, ctshares = moving_average_shares, year = year, categories = categories)
+    topic_shares_pre1750[year] = category_shares(topics = topics_pre1750, ctshares=moving_average_shares_pre1750, year = year, categories=categories_pre1750)
+
 
 
 print('Getting volume scores')

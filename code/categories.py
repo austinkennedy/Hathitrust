@@ -27,6 +27,7 @@ print(topics)
 print(topics_pre1750)
 
 group = [5,9,22,26,35,46,50,55,60] #innocuous topics to be eliminated
+group_pre1750 = [2,19,26,28,35,52] #innocuous topics to be eliminated
 
 #functions
 def cross_share(data):
@@ -111,7 +112,7 @@ shares_pre1750 = cross_share(cross_pre1750)
 
 print('Getting categories')
 clusters = get_shares(shares = shares_all, top = topics, omit = group, length = 3)
-clusters_pre1750 = get_shares(shares = shares_pre1750, top = topics_pre1750, length = 3)
+clusters_pre1750 = get_shares(shares = shares_pre1750, top = topics_pre1750, omit = group_pre1750, length = 3)
 
 print('Exporting Categories')
 clusters.to_csv('../temporary/clusters.txt', index = False)
