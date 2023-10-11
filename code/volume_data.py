@@ -3,6 +3,8 @@ print('Importing Packages')
 import pandas as pd
 import pickle
 from functools import reduce
+import csv
+import config
 
 
 
@@ -100,3 +102,12 @@ print(volumes_scores.head())
 print(volumes_scores.columns)
 print('volumes_scores Dimensions:' + str(volumes_scores.shape))
 volumes_scores.to_csv('../temporary/volumes_scores.csv', index=False)
+
+print('Creating config file for r')
+
+with open('rconfig.csv', 'w', newline='') as csvfile:
+    fieldnames = ['variable', 'value']
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+    writer.writeheader()
+    writer.writerow({'variable': 'output_folder', 'value': config.output_folder})

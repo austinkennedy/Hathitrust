@@ -98,6 +98,7 @@ def distinct_categories(data):
 print('Calculating shares')
 shares_all = cross_share(cross)
 
+
 print('Getting categories')
 clusters = get_shares(shares = shares_all, top = topics, omit = config.eliminated_topics, length = 3)
 
@@ -110,6 +111,7 @@ print(clusters_corpus)
 
 print('Exporting Topics')
 topics.to_csv('../temporary/topics.csv', index=False)
+shares_all.to_csv('../temporary/shares.csv', index = True)
 
 
 

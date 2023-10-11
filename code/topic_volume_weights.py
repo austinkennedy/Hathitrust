@@ -53,16 +53,17 @@ def category_shares(topics, ctshares, year, categories):
         cross_combos = {key:['x'.join(map(str,sorted(i))) for i in value] for key,value in combos.items()} #sorts topic pairs so that they will be called from 'shares' correctly, and joins with 'x'
 
         cross_shares = {key:[shares[str(i)] for i in value] for key,value in cross_combos.items()} #get share value from 'shares'
-
+        print(cross_shares)
         cross_sum = {key:sum(value) if key not in category else sum(value)*1.5 for key,value in cross_shares.items()} #sum shares for the topic and topics in category. If topic in category, multiply by 1.5 since it will be missing one topic pair, e.g. for topic 33 it just has 33x34 and 33x47, so must be scaled correctly. NOT ROBUST YET TO OTHER SIZES THAN 3 TOPICS PER CATEGORY.
-
+        print(cross_sum)
         tmp_dict[name] = cross_sum
 
     df = pd.DataFrame.from_dict(tmp_dict)
+    print(df)
 
     total = df.sum(axis=1) #get total of category scores
     cat_shares = df.div(total, axis=0) #divide by total, so that Religion + Science + Political Economy = 1
-    
+    print(cat_shares)
     return cat_shares
 
 def make_dir(path):
@@ -117,8 +118,6 @@ volumes.to_csv('../temporary/volumes.csv', index=False)
 #Uses 1850 as a basis for whether topic is "science, religion, or politics"
 for year in years:
     topic_shares[year]['Color'] = topic_shares[1850][['Religion','Science','Political Economy']].idxmax(axis=1) #finds highest share for each topic
-
-topic_shares[1550]
 
 
 if config.half_century is True:

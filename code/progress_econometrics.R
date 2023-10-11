@@ -11,8 +11,11 @@ library(margins)
 library(car)
 library(ggpubr)
 
-
 volumes <- read.csv('../temporary/volumes_scores.csv')
+
+#Read variables passed by config file
+config <- read.csv('rconfig.csv')
+output_folder <- config[config$variable == 'output_folder', 'value']
 
 #Create years and bins, set global params
 years <- seq(1510, 1890, by = 1)
@@ -157,7 +160,7 @@ coef_omitted <- "Year"
 
 modelsummary(models, stars = TRUE)
 
-reg_path <- paste('../output/regression_tables/', progress_percentile, sep = '')
+reg_path <- paste(output_folder, 'regression_tables/', progress_percentile, sep = '')
 
 # Define the content of the .gitignore file
 content <- "*
@@ -170,7 +173,7 @@ file_path <- file.path(reg_path, ".gitignore")
 
 
 if (!dir.exists(reg_path)){
-  dir.create(reg_path)
+  dir.create(reg_path, recursive = TRUE)
   
   #Write .gitignore
   file <- file(file_path)
@@ -269,13 +272,13 @@ marginal_fig <- ggplot(marg, aes(x = bin, y = AME, group = label)) +
 
 show(marginal_fig)
 
-path <- paste('../output/regression_figures/', progress_percentile, sep='')
+path <- paste(output_folder, 'regression_figures/', progress_percentile, sep='')
 
 # Create the full file path for .gitignore
 file_path_figs <- file.path(path, ".gitignore")
 
 if (!dir.exists(path)){
-  dir.create(path)
+  dir.create(path, recursive = TRUE)
   
   #Write .gitignore
   file <- file(file_path_figs)
