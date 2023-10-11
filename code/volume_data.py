@@ -16,16 +16,7 @@ updated_progress = pd.read_csv('../input/updated_progress_scores.csv')
 
 
 
-#volume metadata
-metadata = pickle.load(open('../input/metadata.p', 'rb'))
-
-metadata['Year'] = pd.to_numeric(metadata['Year'], downcast='signed')
-
-def fix_htid(row):
-    return row['HTID'].replace(":","+").replace("/", "=")
-
-metadata['HTID'] = metadata.apply(fix_htid, axis=1)
-metadata.drop(columns=['oclc'], inplace=True)
+metadata = pd.read_csv('../temporary/metadata.csv')
 
 
 print('Cleaning Data')

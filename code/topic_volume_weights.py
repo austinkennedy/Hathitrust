@@ -3,16 +3,15 @@
 print('Loading Packages')
 import pandas as pd
 import itertools
+import os
 import numpy as np
-import pickle
 import plotly
 import plotly.express as px
 import plotly.figure_factory as ff
 import plotly.graph_objs as go
 from operator import itemgetter
+import config
 
-#Global options
-half_century = True #set to 'False' to get topic triangles for every year
 
 #Load Data
 print('Loading Data')
@@ -20,16 +19,12 @@ moving_average_shares = pd.read_csv('../temporary/moving_average_shares.csv', in
 topics = pd.read_csv('../temporary/topics.csv')
 volume_topics = pd.read_csv('../temporary/topic_weights.csv')
 
-moving_average_shares_pre1750 = pd.read_csv('../temporary/moving_average_shares_pre1750.csv', index_col='Unnamed: 0')
-topics_pre1750 = pd.read_csv('../temporary/topics_pre1750.csv')
-volume_topics_pre1750 = pd.read_csv('../temporary/topic_weights_pre1750.csv')
-
 #volume metadata
 metadata = pd.read_csv('../temporary/metadata.csv')
 
 #match volume years and fix to be compatible with category weights
 volume_topics = pd.merge(volume_topics, metadata, on = 'HTID', how = 'inner').drop(columns=['oclc','Year'])
-volume_topics_pre1750 = pd.merge(volume_topics_pre1750, metadata, on = 'HTID', how = 'inner').drop(columns=['oclc', 'Year'])
+
 
 def fix_years(df):
     for ind,row in df.iterrows():
@@ -41,10 +36,6 @@ def fix_years(df):
     return df
 
 volume_topics = fix_years(volume_topics)
-volume_topics_pre1750 = fix_years(volume_topics_pre1750)
-
-print(max(volume_topics['Year_rounded']))
-print(min(volume_topics_pre1750['Year_rounded']))
 
 #Functions
 def category_shares(topics, ctshares, year, categories):
@@ -74,19 +65,16 @@ def category_shares(topics, ctshares, year, categories):
     
     return cat_shares
 
-#output of categories.py. Again, classification into 'Religion', 'Science', and 'Political Economy' labels is subjective
-categories = {
-    'Religion':[4,12,52],
-    'Science':[7,8,41],
-    'Political Economy':[33,34,47]
-    }
+def make_dir(path):
+            #check if directory in path exists, if not create it
+    if not os.path.exists(path):
+        os.makedirs(path)
 
-#output of categories.py and substitution of a couple topics for 'Science'. Classification into labels is subjective. For robustness.
-categories_pre1750 = {
-    'Religion':[3,16,53],
-    'Science':[11,46,60],
-    'Political Economy':[1,15,30]
-}
+        # Create .gitignore file
+        gitignore_path = os.path.join(path, ".gitignore")
+        with open(gitignore_path, "w") as gitignore_file:
+            gitignore_file.write("*\n*/\n!.gitignore\n")
+        print(f".gitignore file created.") 
 
 years=[]
 for year in range(1510,1891):
@@ -95,11 +83,10 @@ for year in range(1510,1891):
 print('Getting topic scores')
 #get topic category scores for every year
 topic_shares = {}
-topic_shares_pre1750 = {}
 
 for year in years:
-    topic_shares[year] = category_shares(topics = topics, ctshares = moving_average_shares, year = year, categories = categories)
-    topic_shares_pre1750[year] = category_shares(topics = topics_pre1750, ctshares=moving_average_shares_pre1750, year = year, categories=categories_pre1750)
+    topic_shares[year] = category_shares(topics = topics, ctshares = moving_average_shares, year = year, categories = config.categories)
+
 
 
 
@@ -134,10 +121,12 @@ for year in years:
 topic_shares[1550]
 
 
-if half_century is True:
+if config.half_century is True:
     years = []
     for year in range(1550, 1891, 50):
         years.append(year)
+
+make_dir(config.output_folder + 'topic_triangles/')
 
 print('Ternary Plots')
 #create and export ternary plots
@@ -157,9 +146,9 @@ for year in years:
         #add legend and adjust size for 1850
         fig.update_traces(showlegend=True)
         fig.update_layout(legend = dict(y=0.5), legend_title_text = 'Legend')
-        fig.write_image('../output/topic_triangles/' + str(year) +'.png', width = 900)
+        fig.write_image(config.output_folder + 'topic_triangles/' + str(year) +'.png', width = 900)
     else:
-        fig.write_image('../output/topic_triangles/' + str(year) +'.png')
+        fig.write_image(config.output_folder + 'topic_triangles/' + str(year) +'.png')
 
 
 
