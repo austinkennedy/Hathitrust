@@ -12,6 +12,10 @@ library(sandwich)
 library(car)
 library(reshape2)
 
+#Read variables passed by config file
+config <- read.csv('rconfig.csv')
+output_folder <- config[config$variable == 'output_folder', 'value']
+
 
 #Load Data
 volumes <- read.csv('../temporary/volumes_scores.csv')
@@ -189,7 +193,7 @@ modelsummary(models,
              coef_omit = "Year",
              stars = TRUE)
 
-reg_path <- paste('../output/regression_tables/', ind, sep = '')
+reg_path <- paste(output_folder, 'regression_tables/', ind, sep = '')
 
 # Define the content of the .gitignore file
 content <- "*
@@ -202,7 +206,7 @@ file_path <- file.path(reg_path, ".gitignore")
 
 
 if (!dir.exists(reg_path)){
-  dir.create(reg_path)
+  dir.create(reg_path, recursive = TRUE)
   
   #Write .gitignore
   file <- file(file_path)
@@ -326,13 +330,13 @@ figure <- ggarrange(predicted_fig_0, predicted_fig_1,
                     widths = c(5.5,8))
 show(figure)
 
-path <- paste('../output/regression_figures/', ind, sep='')
+path <- paste(output_folder, 'regression_figures/', ind, sep='')
 
 # Create the full file path for .gitignore
 file_path_figs <- file.path(path, ".gitignore")
 
 if (!dir.exists(path)){
-  dir.create(path)
+  dir.create(path, recursive = TRUE)
   
   #Write .gitignore
   file <- file(file_path_figs)
