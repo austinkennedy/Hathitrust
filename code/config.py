@@ -45,14 +45,14 @@ pre_1750 = True
 topic_info = '../input/20230623_keys.txt'
 
 #innocuous topics to be eliminated
-eliminated_topics = [2,19,26,28,35,52]
+eliminated_topics = [3,19,26,28,35,52]
 
 #check before running 'topic_volume_weights.py'. The classification of the output from 'categories.py' into 'Religion', 'Science', and 'Political Economy' is subjective and needs to be manually classified.
 
 categories = {
-    'Religion':[9,13,48],
-    'Science':[37,45,54],
-    'Political Economy':[5,18,29]
+    'Religion':[2,16,53],
+    'Science':[11,46,60],
+    'Political Economy':[1,15,30]
 }
 
 #set to 'False' to get triangle plots for every year instead of every half-century

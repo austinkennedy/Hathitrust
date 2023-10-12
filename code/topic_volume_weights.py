@@ -48,9 +48,13 @@ def category_shares(topics, ctshares, year, categories):
     shares = ctshares[str(year)] #grab column with cross-topic shares for the year
 
     for name,category in categories.items():
+        print(year)
+        print(category)
         combos = {topic:list(itertools.product([topic], set(category) - set([topic]))) for topic in topic_numbers} #This gets the appropriate combo of each topic and the topics in each category, so for topic 1 and 'Political Economy', gets [(1,33),(1,34),(1,47)]
+        print(combos)
 
         cross_combos = {key:['x'.join(map(str,sorted(i))) for i in value] for key,value in combos.items()} #sorts topic pairs so that they will be called from 'shares' correctly, and joins with 'x'
+        print(cross_combos)
 
         cross_shares = {key:[shares[str(i)] for i in value] for key,value in cross_combos.items()} #get share value from 'shares'
         print(cross_shares)

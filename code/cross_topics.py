@@ -62,6 +62,9 @@ def cross_multiply(df):
     return cr
 
 
+# described = data.describe()
+# described.to_csv(config.output_folder + 'data_descriptive_stats.csv')
+
 cross = cross_multiply(data)
 
 print(cross.head)
