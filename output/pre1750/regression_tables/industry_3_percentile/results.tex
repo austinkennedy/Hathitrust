@@ -1,0 +1,43 @@
+\begin{table}
+
+\caption{Dependent Variable: Progress Percentile}
+\centering
+\begin{threeparttable}
+\begin{tabular}[t]{lcccccc}
+\toprule
+  & Reference & 1675 & 1725 & 1775 & 1825 & 1875\\
+\midrule
+(Intercept) & \num{1.719} & \num{18.884} & \num{-221.793}*** & \num{271.477}*** & \num{-46.346}*** & \num{71.235}***\\
+ & (\num{3.110}) & (\num{19.175}) & (\num{62.080}) & (\num{48.075}) & (\num{10.363}) & (\num{8.482})\\
+Industry & \num{-74.543}+ & \num{102.004} & \num{104.767} & \num{7.827} & \num{318.844}*** & \num{153.108}**\\
+ & (\num{41.184}) & (\num{62.407}) & (\num{140.997}) & (\num{90.932}) & (\num{62.317}) & (\num{50.251})\\
+Science & \num{4.638} & \num{-17.841} & \num{188.204}** & \num{-252.168}*** & \num{56.667}*** & \num{-57.241}***\\
+ & (\num{3.143}) & (\num{21.629}) & (\num{59.658}) & (\num{49.911}) & (\num{11.625}) & (\num{8.862})\\
+PolitEcon & \num{4.838}+ & \num{-44.215}* & \num{200.896}** & \num{-258.826}*** & \num{-4.264} & \num{-21.708}***\\
+ & (\num{2.751}) & (\num{17.828}) & (\num{75.205}) & (\num{49.612}) & (\num{9.828}) & (\num{5.617})\\
+$\text{Science} \times \text{Religion}$ & \num{2.024} & \num{-61.233}* & \num{433.379}*** & \num{-494.708}*** & \num{-3.411} & \num{-94.420}***\\
+ & (\num{5.297}) & (\num{30.550}) & (\num{123.023}) & (\num{77.845}) & (\num{17.197}) & (\num{9.075})\\
+$\text{Science} \times \text{PolitEcon}$ & \num{-6.676}+ & \num{61.695} & \num{4.577} & \num{103.000} & \num{50.943}*** & \num{-83.751}***\\
+ & (\num{3.978}) & (\num{40.825}) & (\num{64.589}) & (\num{66.404}) & (\num{12.654}) & (\num{12.708})\\
+$\text{Religion} \times \text{PolitEcon}$ & \num{10.221} & \num{17.822} & \num{372.784}*** & \num{-502.357}*** & \num{217.040}*** & \num{-216.003}***\\
+ & (\num{10.195}) & (\num{51.919}) & (\num{97.548}) & (\num{140.893}) & (\num{26.468}) & (\num{31.516})\\
+$\text{Science} \times \text{Industry}$ & \num{68.789}* & \num{-61.532} & \num{-170.798} & \num{27.877} & \num{-255.593}*** & \num{-97.696}*\\
+ & (\num{29.011}) & (\num{50.918}) & (\num{126.459}) & (\num{94.655}) & (\num{50.583}) & (\num{38.425})\\
+$\text{PolitEcon} \times \text{Industry}$ & \num{89.620}+ & \num{-129.856}+ & \num{-189.915} & \num{-394.422}*** & \num{167.740}** & \num{-4.824}\\
+ & (\num{51.648}) & (\num{68.186}) & (\num{148.563}) & (\num{111.407}) & (\num{57.386}) & (\num{58.209})\\
+$\text{Science} \times \text{Religion} \times \text{Industry}$ & \num{171.784} & \num{-317.758}* & \num{-97.805} & \num{-456.116}* & \num{-157.071} & \num{-246.544}+\\
+ & (\num{127.887}) & (\num{158.445}) & (\num{304.430}) & (\num{188.903}) & (\num{147.849}) & (\num{142.329})\\
+$\text{Science} \times \text{PolitEcon} \times \text{Industry}$ & \num{-84.934} & \num{57.938} & \num{395.012}** & \num{639.148}*** & \num{-862.940}*** & \num{-298.133}***\\
+ & (\num{58.488}) & (\num{146.566}) & (\num{150.146}) & (\num{156.010}) & (\num{98.097}) & (\num{73.602})\\
+$\text{Religion} \times \text{PolitEcon} \times \text{Industry}$ & \num{108.976}* & \num{-81.803} & \num{-166.661} & \num{858.549}** & \num{-1577.884}*** & \num{-520.539}***\\
+ & (\num{47.578}) & (\num{142.608}) & (\num{235.774}) & (\num{266.730}) & (\num{170.802}) & (\num{108.489})\\
+\midrule
+Num.Obs. & \num{160603} &  &  &  &  & \\
+R2 & \num{0.179} &  &  &  &  & \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item + p $<$ 0.1, * p $<$ 0.05, ** p $<$ 0.01, *** p $<$ 0.001 Volumes are placed into 50 year ((+/-) 25 year) bins. Columns represent interactions between bin fixed effects and the variables of interest (rows). Observations prior to 1600 are dropped. $Industry$ represents the industry score by percentile over the whole corpus. Standard errors are clustered by year of publication.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}

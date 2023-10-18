@@ -4,7 +4,7 @@ Global options are set in 'config.py'. Use these options to run the data trained
 
 The analysis can be run entirely via 'run_scripts.py'. It runs in the following order:
 
-cross_topics.py --> categories.py --> shares.py --> topic_volume_weights.py --> volume_data.py --> volume_figures.py --> progress_econometrics.R --> industry_econometrics.R
+cross_topics.py --> categories.py --> shares.py --> sampling.py --> topic_volume_weights.py --> volume_data.py --> volume_figures.py --> progress_econometrics.R --> industry_econometrics.R
 
 
 Notes:
