@@ -13,23 +13,23 @@ years = []
 for year in range(1500, 1900, sampling_window):
     years.append(year)
 
-n =[]
+n ={}
 #find max volumes to sample
 for year in years:
     df = volumes[(volumes['Year_rounded'] >= year) & (volumes['Year_rounded'] < (year+50))]
-    n.append(len(df))
+    n[year] = len(df)
 
-#sampling size is the smallest number of volumes in any sampling window (most likely 1500-1550, but flexible to others)
+#Choosing 1600 as sample size given small amount of volumes between 1500-1600
 print(n)
-sample_size = min(n)
-print('Sample size is:' + str(sample_size))
+sample_size = n[1600]
+print('Sample size is: ' + str(sample_size))
 
 print('Sampling')
 for sample in range(1,samples+1):
     sampled_volumes = []
     for year in years:
         df = volumes[(volumes['Year_rounded'] >= year) & (volumes['Year_rounded'] < (year+50))]
-        sampled_volumes.append(df.sample(n = sample_size))
+        sampled_volumes.append(df.sample(n = min(sample_size, n[year])))
     
     df_sampled = pd.concat(sampled_volumes)
     sampled_htids = df_sampled['HTID']
