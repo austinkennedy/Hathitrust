@@ -6,24 +6,7 @@ import config
 #Import data
 print('Loading Data')
 
-data = pd.read_csv(config.raw_topic_scores, sep = '\t', lineterminator = '\n', header=None)
-
-if config.pre_1750 is False:
-    data.drop(columns = 0, inplace = True)
-    data[1] = [string[string.rfind('/UK_data/')+9:-4] for string in data[1]]
-    data.columns = ['HTID'] + [i for i in range(1,len(data.columns))]
-    print('Data dimensions:' + str(data.shape))
-    print(data.head)
-
-elif config.pre_1750 is True:
-    data.drop(columns = 0, inplace = True)
-    data[1] = [string[string.rfind('/all/')+5:-4] for string in data[1]]
-    data.columns = ['HTID'] + [i for i in range(1,len(data.columns))]
-    print('Data (Pre-1750) dimensions:' + str(data.shape))
-    print(data.head)
-
-else:
-    print('Please set pre_1750 to True or False')
+data = pd.read_csv('../temporary/topic_weights_' + config.topic_weights + '.csv', sep = '\t', lineterminator = '\n', header=None)
 
 #Function for getting cross-topic weights
 def cross_multiply(df):

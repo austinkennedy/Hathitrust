@@ -1,11 +1,6 @@
 #raw volume data, with scores for each of the 60 topics
 #trained on full sample
-raw_topic_scores = '../input/20191007_topics.txt'
-
-
-#Allows for data cleaning specific to the dataset
-pre_1750 = False
-
+topic_weights = 'full'
 
 #topics themselves
 topic_info = '../input/20191007_keys.txt'
@@ -26,7 +21,8 @@ half_century = True
 
 output_folder = '../output/full_sample/'
 
-
+##Uncomment this section for Sample 1
+topic_scores = 'sample_1'
 
 
 
@@ -34,14 +30,10 @@ output_folder = '../output/full_sample/'
 
 # #raw volume data, with scores for each of the 60 topics
 # #trained on full sample
-# raw_topic_scores = '../input/20230921_infer_topics.txt'
+# topic_weights = 'sample_1'
 
 
-# #Allows for data cleaning specific to the dataset
-# pre_1750 = True
-
-
-# #topics themselves
+# #topics themselves 
 # topic_info = '../input/20230623_keys.txt'
 
 # #innocuous topics to be eliminated

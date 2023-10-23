@@ -7,16 +7,7 @@ import pickle
 print('Loading Data')
 #Load Data
 cross = pd.read_csv('../temporary/cross_topics.csv')
-
-metapath = '../input/metadata.p'
-metadata = pickle.load(open(metapath, 'rb'))
-
-metadata['Year_rounded'] = pd.to_numeric(metadata['Year'])
-metadata['Year'] = pd.to_numeric(metadata['Year'], downcast='signed')
-def fix_htid(row):
-    return row['HTID'].replace(":","+").replace("/", "=")
-
-metadata['HTID'] = metadata.apply(fix_htid, axis=1)
+metadata = pd.read_csv('../temporary/metadata.csv')
 
 #merge years onto volumes
 cross = pd.merge(cross, metadata, on='HTID', how='inner').drop(columns = ['oclc', 'Year'])
@@ -52,9 +43,6 @@ moving_average_shares = pd.DataFrame.from_dict(ct_shares)
 print('Exporting data')
 print(moving_average_shares.head())
 moving_average_shares.to_csv('../temporary/moving_average_shares.csv', index=True)
-
-#export fixed metadata
-metadata.to_csv('../temporary/metadata.csv')
 
 
 
