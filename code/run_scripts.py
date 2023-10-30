@@ -1,17 +1,17 @@
 import subprocess
 
 ##Run Python Scripts
+print('Running clean_data.py')
+subprocess.run(['python', 'clean_data.py'])
+
 print('Running cross_topics.py')
 subprocess.run(['python', 'cross_topics.py'])
 
 print('Running categories.py')
 subprocess.run(['python', 'categories.py'])
 
-print('Running shares.py')
-subprocess.run(['python', 'shares.py'])
-
-print('Running sampling.py')
-subprocess.run(['python', 'sampling.py'])
+# print('Running shares.py')
+# subprocess.run(['python', 'shares.py'])
 
 # print('Running topic_volume_weights.py')
 # subprocess.run(['python', 'topic_volume_weights.py'])

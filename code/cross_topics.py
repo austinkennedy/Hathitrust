@@ -6,7 +6,8 @@ import config
 #Import data
 print('Loading Data')
 
-data = pd.read_csv('../temporary/topic_weights_' + config.topic_weights + '.csv', sep = '\t', lineterminator = '\n', header=None)
+data = pd.read_csv('../temporary/topic_weights_' + config.topic_weights + '.csv')
+print(data)
 
 #Function for getting cross-topic weights
 def cross_multiply(df):
@@ -27,14 +28,20 @@ def cross_multiply(df):
     while i < len(df.columns):
         a = np.array(df.iloc[:,i])
 
-        b = np.array(df.iloc[:,i+1:]) 
+        b = np.array(df.iloc[:,i+1:])
+
 
         c = (b.T * a).T #element-wise multiplication, multiplies topic weight by every other weight for each volume
 
         cols = [str(names[i]) + 'x' + str(j) for j in names[i+1:]] #column names, 'topic1 x topic2'
         
-        
         ls.append(pd.DataFrame(c, columns=cols))
+
+        if i == 0:
+            print(pd.DataFrame(a))
+            print(pd.DataFrame(b))
+            print(pd.DataFrame(c))
+            print(ls)
 
         i += 1
 
