@@ -33,9 +33,9 @@ eliminated_topics = []
 #check before running 'topic_volume_weights.py'. The classification of the output from 'categories.py' into 'Religion', 'Science', and 'Political Economy' is subjective and needs to be manually classified.
 
 categories = {
-    'Religion':[13,44,47],
-    'Science':[20,36,55],
-    'Political Economy':[17,24,39]
+    'Religion':[14,18,40],
+    'Science':[21,36,42],
+    'Political Economy':[9,16,35]
     }
 
 #set to 'False' to get triangle plots for every year instead of every half-century

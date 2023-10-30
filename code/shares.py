@@ -27,7 +27,13 @@ def moving_shares(data, year):
     if 'HTID' in df.columns:
         df.drop(columns = ['HTID'], inplace=True)
 
-    print(df)
+    #snapshot of calculation
+    if year == 1800:
+        print(df)
+        print(df.sum(axis = 0))
+        print(sum(df.sum(axis=0)))
+        df.to_csv('../temporary/shares_test.csv')
+    
 
     share = df.sum(axis=0) / sum(df.sum(axis=0)) #numerator gets sum of each cross-topic across all volumes, denominator gets sum of all cross-topics over all volumes in window
 
