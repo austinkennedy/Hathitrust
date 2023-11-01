@@ -5,7 +5,9 @@ library(ggpubr)
 library(patchwork)
 
 volumes <- read.csv('../temporary/volumes_scores.csv')
-half_century <- TRUE
+config <- read.csv('rconfig.csv')
+half_century <- as.logical(config[config$variable == 'half_century', 'value'])
+output_folder <- config[config$variable == 'output_folder', 'value']
 
 if (half_century == TRUE){
   years <- seq(1550, 1850, by = 50)
@@ -22,9 +24,9 @@ for (year in years){
                            Year <= year + 10)
   
   tmp_fig <- ggtern(df, aes(x = Political.Economy, y = Religion, z = Science)) + 
-    geom_tri_tern(bins=5, aes(fill = ..stat.., value = progress_percentile), fun = mean) +
+    geom_tri_tern(bins=5, aes(fill = ..stat.., value = progress_percentile_main), fun = mean) +
     stat_tri_tern(bins = 5, geom = 'point',
-                  aes(size = ..count.., value = progress_percentile),
+                  aes(size = ..count.., value = progress_percentile_main),
                   color="white",
                   centroid = TRUE) +
     labs(x = 'Political Economy', y = 'Religion', z = 'Science', title = year, fill = 'Progress (Percentile)', size = 'Volumes')
@@ -44,14 +46,32 @@ vol_count <- na.omit(vol_count)
 figure_list <- list()
 label = seq(0,1,by=0.2)
 
+#create filepath with .gitignore
+path <- paste(output_folder, 'subtriangles', sep = '')
+if (!dir.exists(path)){
+  dir.create(path, recursive = TRUE)
+  
+  #write .gitignore
+  ignorepath <- file.path(path, '.gitignore')
+  file <- file(ignorepath)
+  content <- "*
+  */
+  !.gitignore"
+  writeLines(content, file)
+  close(file)
+  print('directory created')
+}else{
+  print('dir exists')
+}
+
 for (year in years){
   df <- volumes %>% filter(Year >= year - 10,
                            Year <= year + 10)
   
   plot <- ggtern(df, aes(x = Political.Economy, y = Religion, z = Science)) +
-    geom_tri_tern(bins=5, aes(fill=..stat.., value = progress_percentile), fun = mean) +
+    geom_tri_tern(bins=5, aes(fill=..stat.., value = progress_percentile_main), fun = mean) +
     stat_tri_tern(bins = 5, geom='point',
-                  aes(size=..count.., progress_percentile),
+                  aes(size=..count.., progress_percentile_main),
                   color='white', centroid = TRUE) +
     labs(x = 'Political\nEconomy', y = "Religion", z = "Science", title = year, fill = 'Progress (Percentile)', size = "Volumes") +
     
@@ -72,7 +92,7 @@ for (year in years){
                labels=label)+
 
     guides(size=guide_legend(reverse=TRUE, order = 0),
-           fill = guide_colorbar(title = 'yo mama',
+           fill = guide_colorbar(title = 'Percentile',
                                  limits = c(0,1),
                                  breaks = seq(0,1,by=0.25)))+
     theme(tern.axis.title.R = element_text(hjust=0.6, vjust = 0.9), tern.axis.title.L = element_text(hjust = 0.3, vjust = 0.9))+
@@ -82,17 +102,17 @@ for (year in years){
   # tmp <- ggplotGrob(plot)
 
   # figure_list[[toString(year)]] <- plot
-  path <- sprintf('../output/subtriangles/%s.png', year)
-  ggsave(path, width = 6.5, height = 4.5)
+  
+  ggsave(paste(path, '/', year, '.png', sep = ''),width = 6.5, height = 4.5)
 }
 
-fig <- wrap_plots(figure_list, ncol = 2, nrow = 4) + plot_layout(widths = c(1,15,5), guides = "collect") & theme(legend.position = "right")
-
-ggplot2::ggsave('../output/subtriangles/heat_fig.png', fig)
-
-show(print(fig))
-
-ggtern::grid.arrange(grobs = figure_list, ncol=2, nrow=4)
+# fig <- wrap_plots(figure_list, ncol = 2, nrow = 4) + plot_layout(widths = c(1,15,5), guides = "collect") & theme(legend.position = "right")
+# 
+# ggplot2::ggsave(paste(path, '/heat_fig.png', sep = ''), fig)
+# 
+# show(print(fig))
+# 
+# ggtern::grid.arrange(grobs = figure_list, ncol=2, nrow=4)
 
 
 

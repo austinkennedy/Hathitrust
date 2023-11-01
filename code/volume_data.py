@@ -111,3 +111,8 @@ with open('rconfig.csv', 'w', newline='') as csvfile:
 
     writer.writeheader()
     writer.writerow({'variable': 'output_folder', 'value': config.output_folder})
+
+    if config.half_century is True:
+        writer.writerow({'variable': 'half_century',  'value': 'TRUE'})
+    else:
+        writer.writerow({'variable': 'half_century', 'value': 'FALSE'})
