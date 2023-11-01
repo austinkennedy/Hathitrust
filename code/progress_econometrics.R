@@ -48,8 +48,8 @@ volumes <- volumes %>%
 reference = min(bins)
 
 # econometrics <- function(progress_percentile){
-progress_vars <- list('progress_percentile_original', 'progress_percentile_main', 'progress_percentile_secondary')
-
+# progress_vars <- list('progress_percentile_original', 'progress_percentile_main', 'progress_percentile_secondary')
+progress_vars <- list('progress_percentile_main')
 
 for (progress_percentile in progress_vars){
 #Uses feols to carry clustered SEs throughout
