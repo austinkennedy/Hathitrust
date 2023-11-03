@@ -55,8 +55,8 @@ if (!dir.exists(path)){
   ignorepath <- file.path(path, '.gitignore')
   file <- file(ignorepath)
   content <- "*
-  */
-  !.gitignore"
+*/
+!.gitignore"
   writeLines(content, file)
   close(file)
   print('directory created')
