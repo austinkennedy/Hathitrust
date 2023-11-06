@@ -82,11 +82,13 @@ for (year in years){
     
 
     scale_fill_gradient(low = "#56c7f7",high="#132B43", na.value="white",
-                        limits = c(min(percentiles), max(percentiles)))+#Lighter blue
+                        limits = c(min(percentiles), max(percentiles)),
+                        breaks = c(0,0.25, 0.5, 0.75, 1))+#Lighter blue
+
     scale_size_continuous(range = c(0,10),
                           limits = c(1, 12500),
                           breaks = c(10, 100, 1000, 2500, 5000, 8000, 12500)) + #Set limits and breaks of volume dots
-    
+  
     limit_tern(limits=c(0,1.0),
                breaks=seq(0,1,by=0.2),
                labels=label)+

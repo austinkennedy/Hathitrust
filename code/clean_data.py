@@ -8,7 +8,7 @@ sample_1 = pd.read_csv('../input/20231024_infer_topics.txt', sep = '\t', lineter
 # sample_3 = pd.read_csv('../input/20231027_infer_topics.txt', sep = '\t', lineterminator = '\n', header=None)
 # sample_4 = pd.read_csv('../input/20231026_infer_topics.txt', sep = '\t', lineterminator = '\n', header=None)
 
-# print(sample_1)
+print(sample_1)
 # print(sample_2)
 # print(sample_3)
 # print(sample_4)
