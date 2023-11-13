@@ -10,14 +10,14 @@ subprocess.run(['python', 'cross_topics.py'])
 print('Running categories.py')
 subprocess.run(['python', 'categories.py'])
 
-print('Running shares.py')
-subprocess.run(['python', 'shares.py'])
+# print('Running shares.py')
+# subprocess.run(['python', 'shares.py'])
 
-print('Running topic_volume_weights.py')
-subprocess.run(['python', 'topic_volume_weights.py'])
+# print('Running topic_volume_weights.py')
+# subprocess.run(['python', 'topic_volume_weights.py'])
 
-print('Running volume_data.py')
-subprocess.run(['python', 'volume_data.py'])
+# print('Running volume_data.py')
+# subprocess.run(['python', 'volume_data.py'])
 
 # print('Running volume_figures.py')
 # subprocess.run(['python', 'volume_figures.py'])

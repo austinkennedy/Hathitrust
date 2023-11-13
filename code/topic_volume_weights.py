@@ -71,11 +71,10 @@ def category_shares(topics, ctshares, year, categories):
 
 
     df = pd.DataFrame.from_dict(tmp_dict)
-    print(df)
+    
 
     total = df.sum(axis=1) #get total of category scores
     cat_shares = df.div(total, axis=0) #divide by total, so that Religion + Science + Political Economy = 1
-    print(cat_shares)
     return cat_shares
 
 def make_dir(path):
