@@ -11,7 +11,6 @@ metadata = pd.read_csv('../temporary/metadata.csv')
 
 #merge years onto volumes
 cross = pd.merge(cross, metadata, on='HTID', how='inner').drop(columns = ['oclc', 'Year'])
-print(cross.head())
 
 #create sequence of years
 years=[]
@@ -45,7 +44,7 @@ for year in years:
     ct_shares[year] = moving_shares(cross, year)
 
 moving_average_shares = pd.DataFrame.from_dict(ct_shares)
-
+print(cross.head())
 print('Exporting data')
 print(moving_average_shares.head())
 moving_average_shares.to_csv('../temporary/moving_average_shares.csv', index=True)

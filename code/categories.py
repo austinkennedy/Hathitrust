@@ -10,7 +10,7 @@ print('Loading Data')
 volume_weights = pd.read_csv("../temporary/topic_weights.csv")
 cross = pd.read_csv('../temporary/cross_topics.csv')
 topics = pd.read_csv(config.topic_info, sep = '\t', lineterminator='\n', header=None)
-
+print(topics)
 #fix topic numbers
 topics.drop(columns=0, inplace=True)
 
@@ -97,7 +97,7 @@ def distinct_categories(data):
 
 print('Calculating shares')
 shares_all = cross_share(cross)
-
+print(shares_all)
 
 print('Getting categories')
 clusters = get_shares(shares = shares_all, top = topics, omit = config.eliminated_topics, length = 3)
