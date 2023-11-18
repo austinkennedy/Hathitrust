@@ -123,6 +123,12 @@ volumes
 #export
 volumes.to_csv('../temporary/volumes.csv', index=False)
 
+volumes = volumes.add_suffix('_' + config.topic_weights)
+
+print(volumes)
+
+volumes.to_csv('../temporary/volumes_' + config.topic_weights + '.csv', index=False)
+
 #Topic ternary plots-much easier to do it within this script so as to not have to export/import dictionary of dataframes
 
 #Get colors of each topic

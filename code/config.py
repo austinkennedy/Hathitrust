@@ -22,26 +22,26 @@
 # output_folder = '../output/full_sample/'
 
 # # ##Uncomment this section for Sample 1
-topic_weights = 'sample_1'
+# topic_weights = 'sample_1'
 
-#topics themselves
-topic_info = '../input/20231019_keys.txt'
+# #topics themselves
+# topic_info = '../input/20231019_keys.txt'
 
-#innocuous topics to be eliminated
-eliminated_topics = []
+# #innocuous topics to be eliminated
+# eliminated_topics = []
 
-#check before running 'topic_volume_weights.py'. The classification of the output from 'categories.py' into 'Religion', 'Science', and 'Political Economy' is subjective and needs to be manually classified.
+# #check before running 'topic_volume_weights.py'. The classification of the output from 'categories.py' into 'Religion', 'Science', and 'Political Economy' is subjective and needs to be manually classified.
 
-categories = {
-    'Religion':[18,29,40],
-    'Science':[9,21,42],
-    'Political Economy':[16,37,39]
-    }
+# categories = {
+#     'Religion':[18,29,40],
+#     'Science':[9,21,42],
+#     'Political Economy':[16,37,39]
+#     }
 
-#set to 'False' to get triangle plots for every year instead of every half-century
-half_century = True
+# #set to 'False' to get triangle plots for every year instead of every half-century
+# half_century = True
 
-output_folder = '../output/sample_1/'
+# output_folder = '../output/sample_1/'
 
 #####Uncomment for sample 2
 
@@ -91,26 +91,26 @@ output_folder = '../output/sample_1/'
 
 #####Uncomment for sample 4
 
-# topic_weights = 'sample_4'
+topic_weights = 'sample_4'
 
-# #topics themselves
-# topic_info = '../input/20231019_sample_4_keys.txt'
+#topics themselves
+topic_info = '../input/20231019_sample_4_keys.txt'
 
-# #innocuous topics to be eliminated
-# eliminated_topics = []
+#innocuous topics to be eliminated
+eliminated_topics = []
 
-# #check before running 'topic_volume_weights.py'. The classification of the output from 'categories.py' into 'Religion', 'Science', and 'Political Economy' is subjective and needs to be manually classified.
+#check before running 'topic_volume_weights.py'. The classification of the output from 'categories.py' into 'Religion', 'Science', and 'Political Economy' is subjective and needs to be manually classified.
 
-# categories = {
-#     'Religion':[29,35,57],
-#     'Science':[11,12,36],
-#     'Political Economy':[9,37,41]
-#     }
+categories = {
+    'Religion':[29,35,57],
+    'Science':[11,12,36],
+    'Political Economy':[9,37,41]
+    }
 
-# #set to 'False' to get triangle plots for every year instead of every half-century
-# half_century = True
+#set to 'False' to get triangle plots for every year instead of every half-century
+half_century = True
 
-# output_folder = '../output/sample_4/'
+output_folder = '../output/sample_4/'
 
 
 
