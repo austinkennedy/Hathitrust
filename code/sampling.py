@@ -16,7 +16,7 @@ for year in range(1500, 1900, sampling_window):
 n ={}
 #find max volumes to sample
 for year in years:
-    df = volumes[(volumes['Year_rounded'] >= year) & (volumes['Year_rounded'] < (year+50))]
+    df = volumes[(volumes['Year_rounded'] >= year) & (volumes['Year_rounded'] < (year+sampling_window))]
     n[year] = len(df)
 
 #Choosing 1600 as sample size given small amount of volumes between 1500-1600
@@ -28,7 +28,7 @@ print('Sampling')
 for sample in range(1,samples+1):
     sampled_volumes = []
     for year in years:
-        df = volumes[(volumes['Year_rounded'] >= year) & (volumes['Year_rounded'] < (year+50))]
+        df = volumes[(volumes['Year_rounded'] >= year) & (volumes['Year_rounded'] < (year+sampling_window))]
         sampled_volumes.append(df.sample(n = min(sample_size, n[year])))
     
     df_sampled = pd.concat(sampled_volumes)
