@@ -43,7 +43,7 @@ half_century = True
 
 output_folder = '../output/sample_1/'
 
-#####Uncomment for sample 2
+####Uncomment for sample 2
 
 # topic_weights = 'sample_2'
 
