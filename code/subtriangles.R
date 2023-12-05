@@ -82,12 +82,12 @@ for (year in years){
     
 
     scale_fill_gradient(low = "#56c7f7",high="#132B43", na.value="white",
-                        limits = c(min(percentiles), max(percentiles)),
+                        limits = c(0, 1),
                         breaks = c(0,0.25, 0.5, 0.75, 1))+#Lighter blue
 
     scale_size_continuous(range = c(0,10),
-                          limits = c(1, 12500),
-                          breaks = c(10, 100, 1000, 2500, 5000, 8000, 12500)) + #Set limits and breaks of volume dots
+                          limits = c(1, 8000),
+                          breaks = c(10, 100, 1000, 2500, 5000, 8000)) + #Set limits and breaks of volume dots
   
     limit_tern(limits=c(0,1.0),
                breaks=seq(0,1,by=0.2),
@@ -97,8 +97,9 @@ for (year in years){
            fill = guide_colorbar(title = 'Percentile',
                                  limits = c(0,1),
                                  breaks = seq(0,1,by=0.25)))+
-    theme(tern.axis.title.R = element_text(hjust=0.6, vjust = 0.9), tern.axis.title.L = element_text(hjust = 0.3, vjust = 0.9))+
-    theme_dark()
+    theme_dark()+
+    {if(year != 1850)theme(legend.position = "none")}+
+    theme(tern.axis.title.R = element_text(hjust=0.6, vjust = 0.9), tern.axis.title.L = element_text(hjust = 0.3, vjust = 0.9))
   
   show(plot)
   # tmp <- ggplotGrob(plot)
