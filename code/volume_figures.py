@@ -30,7 +30,7 @@ def category_averages(data, year, category):
     means = means[None,:]
     tmp = pd.DataFrame(means, columns=cols.columns)
     tmp['Year'] = year
-    tmp['Volumes'] = len(cat_vols)
+    # tmp['Volumes'] = len(cat_vols)
     return tmp   
 
 def make_dir(path):
@@ -47,6 +47,10 @@ def make_dir(path):
 #Categorize Volumes
 volumes['Category'] = volumes[['Religion','Science','Political Economy']].idxmax(axis=1) #Finds highest share for each topic
 
+category_counts_by_year = volumes.groupby(['Year', 'Category']).size().unstack(fill_value=0).reset_index()
+print(category_counts_by_year)
+
+print(category_counts_by_year)
 # print total amount in each category
 for category in categories:
     n = len(volumes[volumes['Category'] == category])
@@ -70,8 +74,14 @@ for year in years:
     moving_volumes[year] = df
     avg_progress[year] = statistics.mean(df['progress_percentile_main'])
 
+
 for category in categories:
     volumes_time[category] = pd.concat(volumes_time[category])
+    counts = category_counts_by_year[['Year', category]].rename(columns = {category: 'Volumes'})
+    volumes_time[category] = volumes_time[category].merge(counts, on = 'Year')
+    print(volumes_time[category].head())
+    volumes_time[category]['Volumes_rolling'] = volumes_time[category]['Volumes'].rolling(window = 20, min_periods=1, center=True).mean()
+    print(volumes_time[category].head())
 
 make_dir(config.output_folder + 'volumes_over_time/')
 
@@ -89,18 +99,19 @@ for category in categories:
 
     ax2 = ax1.twinx()
     ax2.set_ylabel('# of volumes')
-    ax2.plot(df['Year'], df['Volumes'], color = 'black', label = 'Total Volumes')
+    ax2.plot(df['Year'], df['Volumes_rolling'], color = 'black', label = 'Total Volumes')
     ax2.legend(loc = 'upper center')
-    plt.ylim([0,50000])
+    plt.ylim([0,2500])
 
     fig.savefig(config.output_folder + 'volumes_over_time/' + category + '.png', dpi = 200)
 
 
 #Volume count figure
 count = pd.DataFrame(volume_count.items(), columns=['Year', 'Count'])
+count['Count_rolling'] = count['Count'].rolling(window = 20, min_periods=1, center=True).mean()
 
 fig, (ax1) = plt.subplots(1,1)
-ax1.plot(count['Year'], count['Count'], color = "darkblue", label = "Volume Count")
+ax1.plot(count['Year'], count['Count_rolling'], color = "darkblue", label = "Volume Count")
 ax1.legend(loc = "upper right")
 ax1.set_xlabel('Year')
 ax1.set_yticks([0,25000, 50000, 75000])
@@ -122,7 +133,7 @@ fig.savefig(config.output_folder + 'volumes_over_time/' + 'avg_progress.png', dp
 
 
 
-#Ternary plots
+# #Ternary plots
 
 if config.half_century is True:
     years = []
@@ -191,6 +202,7 @@ def ternary_plots(data, color, filepath, legend_title, years = years, grayscale 
         # fig.update(layout_coloraxis_showscale=False) #removes colorbar
         # fig.write_image(path + str(year) + '.png') #only works with kaleido 0.1.0 for some reason, use 'conda install python-kaleido=0.1.0post1' on PC, also uses plotly 5.10.0
 
+print(volumes)
 
 print('Original Progress Triangles, color')
 ternary_plots(data = moving_volumes,
