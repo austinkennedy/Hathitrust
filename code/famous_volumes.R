@@ -42,7 +42,7 @@ plot <- ggtern(famous_selected, aes(x = Political.Economy, y = Religion, z = Sci
   theme_classic() +
   theme(tern.axis.title.R = element_text(hjust=0.6, vjust = 0.9, size = 10), tern.axis.title.L = element_text(hjust = 0.3, vjust = 0.9, size = 10),
         tern.axis.title.T = element_text(size = 10),
-        legend.title = element_text(size = 10, face = 'bold'), legend.text = element_text(size = 8), legend.spacing.y = unit(0.1, 'cm')) +
+        legend.title = element_text(size = 10, face = 'bold'), legend.text = element_text(size = 10), legend.spacing.y = unit(0.1, 'cm')) +
   guides(color = guide_legend(byrow =TRUE, size =7),
          shape = guide_legend(byrow=TRUE, size =7))
   
@@ -52,6 +52,6 @@ print(plot)
 
 path <- "../output/famous_volumes.png"
 
-ggsave(path, plot)
+ggsave(path, plot, width = 9)
 
 
