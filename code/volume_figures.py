@@ -108,7 +108,10 @@ for category in categories:
 #Volume count figure, raw
 volume_count_raw = {}
 for year in years:
-    volume_count_raw[year] = len(volumes[volumes['Year'] == year])
+    if len(volumes[volumes['Year'] == year]) != 0:
+        volume_count_raw[year] = len(volumes[volumes['Year'] == year])
+    else:
+        volume_count_raw[year] = np.nan
 count_raw = pd.DataFrame(volume_count_raw.items(), columns = ['Year', 'Count'])
 
 fig, (ax1) = plt.subplots(1,1)
@@ -130,7 +133,7 @@ ax1.set_yticklabels(["0", "25,000", "50,000", "75,000"])
 plt.ylim([0,75000])
 fig.savefig(config.output_folder + 'volumes_over_time/total_volumes.png', dpi = 200)
 
-#Average Sentiment Over Time
+#Average Sentiment Over Time (Smoothed)
 progress = pd.DataFrame(avg_progress.items(), columns=['Year', 'avg_progress'])
 
 fig, (ax1) = plt.subplots(1,1)
@@ -140,9 +143,23 @@ ax1.set_xlabel('Year')
 ax1.set_yticks([0,0.25,0.5,0.75,1])
 fig.savefig(config.output_folder + 'volumes_over_time/' + 'avg_progress.png', dpi = 200)
 
+#Average Sentiment Over Time (Raw)
 
+avg_progress_raw = {}
+for year in years:
+    if len(volumes[volumes['Year'] == year]) != 0:
+        avg_progress_raw[year] = statistics.mean(volumes[volumes['Year'] == year]['progress_percentile_main'])
+    else:
+        avg_progress_raw[year] = np.nan
+progress_raw = pd.DataFrame(avg_progress_raw.items(), columns = ['Year', 'avg_progress'])
+fig, (ax1) = plt.subplots(1,1)
+ax1.plot(progress_raw['Year'], progress_raw['avg_progress'], color = 'crimson', label = 'Average Progress Score (Percentile)')
+ax1.legend(loc = 'upper right')
+ax1.set_xlabel('Year')
+ax1.set_yticks([0,0.25,0.5,0.75,1])
+fig.savefig(config.output_folder + 'volumes_over_time/' + 'avg_progress_raw.png', dpi = 200)
 
-
+print(min(volumes['progress_percentile_main']))
 
 # # #Ternary plots
 

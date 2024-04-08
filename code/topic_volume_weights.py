@@ -166,6 +166,29 @@ for year in years:
     else:
         fig.write_image(config.output_folder + 'topic_triangles/' + str(year) +'.png')
 
+        
+make_dir(config.output_folder + 'topic_triangles_grayscale/')
+
+for year in years:
+    fig = px.scatter_ternary(topic_shares[year],
+                                a='Religion', b = 'Political Economy', c = 'Science',
+                                color = 'Color',
+                                color_discrete_map = {'Science':'rgb(60,60,60)', 'Religion': 'rgb(120,120,120)', 'Political Economy':'rgb(180,180,180)'},
+                                template = 'simple_white',
+                                symbol = "Color",
+                                symbol_map = {'Science': 'circle','Religion': 'cross', 'Political Economy': 'triangle-up'})
+
+    fig.update_traces(showlegend=False, marker = {'size': 10})
+    fig.update_layout(title_text = str(year), title_font_size=30, font_size=20)
+
+    if year == 1850:
+        #add legend and adjust size for 1850
+        fig.update_traces(showlegend=True)
+        fig.update_layout(legend = dict(y=0.5), legend_title_text = 'Legend')
+        fig.write_image(config.output_folder + 'topic_triangles_grayscale/' + str(year) +'.png', width = 900)
+    else:
+        fig.write_image(config.output_folder + 'topic_triangles_grayscale/' + str(year) +'.png')
+
 
 
 
