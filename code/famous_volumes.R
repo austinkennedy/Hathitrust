@@ -10,15 +10,15 @@ famous_merged <- merge(volumes[,c('HTID', 'Religion', 'Science', 'Political.Econ
 famous_selected <- famous_merged %>%
   group_by(Title) %>%
   slice_sample(n=1)
+# 
+# famous_selected <- famous_selected %>%
+#   group_by(Category) %>%
+#   mutate(shape = row_number())
 
 famous_selected <- famous_selected %>%
   group_by(Category) %>%
-  mutate(shape = row_number())
-
-famous_selected <- famous_selected %>%
-  group_by(Category) %>%
+  arrange(Category, Year) %>%
   mutate(shape = row_number()) %>%
-  arrange(Category, Title) %>%
   ungroup()
 
 color_map <- data.frame(Category = c('Religion', 'Political Economy', 'Science', 'Literature'),
@@ -72,7 +72,9 @@ plot_gray <- ggtern(famous_selected, aes(x = Political.Economy, y = Religion, z 
   theme_classic() +
   theme(tern.axis.title.R = element_text(hjust=0.6, vjust = 0.9, size = 10), tern.axis.title.L = element_text(hjust = 0.3, vjust = 0.9, size = 10),
         tern.axis.title.T = element_text(size = 10),
-        legend.title = element_text(size = 10, face = 'bold'), legend.text = element_text(size = 10), legend.spacing.y = unit(0.1, 'cm')) +
+        legend.title = element_text(size = 10, face = 'bold'),
+        legend.text = element_text(size = 10),
+        legend.spacing.y = unit(0.1, 'cm')) +
   guides(color = guide_legend(byrow =TRUE, size =7),
          shape = guide_legend(byrow=TRUE, size =7))
 

@@ -86,7 +86,7 @@ volumes_scores['industry_3_percentile'] = volumes_scores.industry_3.rank(pct=Tru
 volumes_scores['industry_1643_percentile'] = volumes_scores.industry_1643.rank(pct = True)
 volumes_scores['optimistic_percentile'] = volumes_scores.percent_optimistic.rank(pct=True)
 volumes_scores['progress_percentile_original'] = volumes_scores.percent_progress_original.rank(pct=True)
-volumes_scores['progress_percentile_main'] = volumes_scores.percent_progress_main.rank(pct=True, method = 'min')
+volumes_scores['progress_percentile_main'] = volumes_scores.percent_progress_main.rank(pct=True, method = 'max')
 volumes_scores['progress_percentile_secondary'] = volumes_scores.percent_progress_secondary.rank(pct=True)
 volumes_scores['pessimism_percentile'] = volumes_scores.percent_pessimism.rank(pct=True)
 volumes_scores['regression_percentile'] = volumes_scores.percent_regression.rank(pct=True)
