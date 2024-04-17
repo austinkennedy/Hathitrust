@@ -22,8 +22,14 @@ subprocess.run(['python', 'volume_data.py'])
 print('Running volume_figures.py')
 subprocess.run(['python', 'volume_figures.py'])
 
-# print('Running progress_econometrics.R')
-# subprocess.run(['Rscript', 'progress_econometrics.R'])
+print('Running progress_econometrics.R')
+subprocess.run(['Rscript', 'progress_econometrics.R'])
 
-# print('Running industry_econometrics.R')
-# subprocess.run(['Rscript', 'industry_econometrics.R'])
+print('Running industry_econometrics.R')
+subprocess.run(['Rscript', 'industry_econometrics.R'])
+
+print('Running subtriangles.R')
+subprocess.run(['Rscript', 'subtriangles.R'])
+
+print('Running biscale_triangles.R')
+subprocess.run(['Rscript', 'biscale_triangles.R'])
