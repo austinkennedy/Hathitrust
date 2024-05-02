@@ -35,6 +35,7 @@ def fix_years(df):
 
     return df
 
+
 volume_topics = fix_years(volume_topics)
 
 #Functions

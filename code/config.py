@@ -1,5 +1,50 @@
-# #raw volume data, with scores for each of the 60 topics
-# #trained on full sample
+#raw volume data, with scores for each of the 60 topics
+#trained on full sample
+
+topic_weights = 'full'
+
+#topics themselves
+topic_info = '../input/20191007_keys.txt'
+
+#innocuous topics to be eliminated
+eliminated_topics = [5,9,22,26,35,46,50,55,60]
+
+#check before running 'topic_volume_weights.py'. The classification of the output from 'categories.py' into 'Religion', 'Science', and 'Political Economy' is subjective and needs to be manually classified.
+
+categories = {
+    'Religion':[4,12,52],
+    'Science':[7,8,41],
+    'Political Economy':[33,34,47]
+    }
+
+#set to 'False' to get triangle plots for every year instead of every half-century
+half_century = True
+
+output_folder = '../output/full_sample/'
+
+bins = True
+
+####################Sample with 80 Topics
+
+# topic_weights = '80_topics'
+
+# topic_info = '../input/20240414_80_topics_keys.txt'
+
+# eliminated_topics = [6,19,28,60,68,71]
+
+# categories = {
+#     'Religion':[8,28,69],
+#     'Science':[11,20,76],
+#     'Political Economy':[2,43,67]
+# }
+
+# half_century = True
+
+# output_folder = '../output/80_topics/'
+
+# bins = True
+
+####Uncomment this section to not include bins
 
 # topic_weights = 'full'
 
@@ -20,25 +65,9 @@
 # #set to 'False' to get triangle plots for every year instead of every half-century
 # half_century = True
 
-# output_folder = '../output/full_sample/'
+# output_folder = '../output/no_binning/'
 
-####################Sample with 80 Topics
-
-topic_weights = '80_topics'
-
-topic_info = '../input/20240414_80_topics_keys.txt'
-
-eliminated_topics = [6,19,28,60,68,71]
-
-categories = {
-    'Religion':[8,28,69],
-    'Science':[11,20,76],
-    'Political Economy':[2,43,67]
-}
-
-half_century = True
-
-output_folder = '../output/80_topics/'
+# bins = False
 
 # ##Uncomment this section for Sample 1
 # topic_weights = 'sample_1'

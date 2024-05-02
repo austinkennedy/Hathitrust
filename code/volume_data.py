@@ -12,7 +12,8 @@ import config
 print('Loading Data')
 volumes = pd.read_csv('../temporary/volumes.csv')
 industry = pd.read_csv('../input/industry_scores.csv')
-industry_pre_1643 = pd.read_csv('../input/industry_scores_pre_1643.csv')
+industry_pre_1643 = pd.read_csv('../input/industry_scores_updated.csv')
+# industry_pre_1643 = pd.read_csv('../input/industry_scores_pre_1643.csv')
 sentiment = pd.read_csv('../input/sentiment_scores_march23.csv')
 updated_progress = pd.read_csv('../input/updated_progress_scores.csv')
 
@@ -25,7 +26,9 @@ print('Cleaning Data')
 #Clean industry data
 industry = industry.rename(columns={'Unnamed: 0': 'HTID', '2-vote':'industry_2','3-vote':'industry_3'})
 
-industry_pre_1643 = industry_pre_1643.rename(columns = {'Unnamed: 0': 'HTID', 'Industrial Scores (June 23)': 'industry_1643'})
+industry_pre_1643 = industry_pre_1643.rename(columns={'Industrial Scores (May 24)': 'industry_1643'})
+
+# industry_pre_1643 = industry_pre_1643.rename(columns = {'Unnamed: 0': 'HTID', 'Industrial Scores (June 23)': 'industry_1643'})
 
 print(industry_pre_1643.head())
 
@@ -83,6 +86,7 @@ print('Finding Percentiles')
 volumes_scores['optimism_percentile'] = volumes_scores.optimism_score.rank(pct=True, method = 'min')
 volumes_scores['industry_2_percentile'] = volumes_scores.industry_2.rank(pct=True, method = 'min')
 volumes_scores['industry_3_percentile'] = volumes_scores.industry_3.rank(pct=True, method = 'min')
+# volumes_scores['industry_percentile'] = volumes_scores.industry.rank(pct=True, method = 'min')
 volumes_scores['industry_1643_percentile'] = volumes_scores.industry_1643.rank(pct = True, method = 'min')
 volumes_scores['optimistic_percentile'] = volumes_scores.percent_optimistic.rank(pct=True, method = 'min')
 volumes_scores['progress_percentile_original'] = volumes_scores.percent_progress_original.rank(pct=True, method = 'min')

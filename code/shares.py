@@ -3,6 +3,7 @@ print('Loading Packages')
 import os
 import pandas as pd
 import pickle
+import config
 
 print('Loading Data')
 #Load Data
@@ -19,8 +20,13 @@ for year in range(1510,1891):
 
 
 def moving_shares(data, year):
-    #get 20-year moving average of data
-    df = data[(data['Year_rounded'] >= (year-10)) & (data['Year_rounded'] <= (year+10))] #grab volumes within +/- 10 year window
+    #get 20-year moving average of data, if bins = True
+    if config.bins is not False:
+        df = data[(data['Year_rounded'] >= (year-10)) & (data['Year_rounded'] <= (year+10))] #grab volumes within +/- 10 year window
+    else:
+        df = data[data['Year_rounded'] == year]
+
+
     df.drop(columns = 'Year_rounded', inplace=True)
 
     if 'HTID' in df.columns:

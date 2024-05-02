@@ -37,7 +37,7 @@ if (!dir.exists(path)){
   print('dir exists')
 }
 
-volumes <- bi_class(volumes, x = progress_percentile_main, y = industry_3_percentile, style = 'equal', dim = dimensions)
+volumes <- bi_class(volumes, x = progress_percentile_main, y = industry_1643_percentile, style = 'equal', dim = dimensions)
 
 for (year in years){
   df <- volumes %>% filter(Year >= year - 10,

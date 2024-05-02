@@ -118,7 +118,13 @@ for (year in years){
 # ggtern::grid.arrange(grobs = figure_list, ncol=2, nrow=4)
 
 
-
+for (year in years){
+  df <- volumes %>% filter(Year >= year - 10,
+                           Year <= year + 10)
+  plot <- ggtern(df, aes(x = Political.Economy, y = Religion, z = Science, color = progress_percentile_main)) + geom_point()
+  
+  show(plot)
+}
 
 
 

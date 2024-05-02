@@ -24,6 +24,8 @@ for year in range(1510,1891):
 
 #functions
 def category_averages(data, year, category):
+    #get category averages within a category
+
     cat_vols = data[data['Category'] == category]
     cols = cat_vols[['Religion', 'Science', 'Political Economy']]
     means = np.array(cols.mean(axis = 0))
@@ -31,7 +33,16 @@ def category_averages(data, year, category):
     tmp = pd.DataFrame(means, columns=cols.columns)
     tmp['Year'] = year
     # tmp['Volumes'] = len(cat_vols)
-    return tmp   
+    return tmp
+
+def category_averages_overall(data):
+    #get overall category averages
+    cols = data[['Religion', 'Science', 'Political Economy']]
+    means = np.array(cols.mean(axis = 0))
+    means = means[None,:]
+    tmp = pd.DataFrame(means, columns=cols.columns)
+    tmp['Year'] = year
+    return tmp
 
 def make_dir(path):
             #check if directory in path exists, if not create it
@@ -59,21 +70,44 @@ for category in categories:
     
 volumes_time = {key: [] for key in categories}
 
+cat_avgs = {}
+cat_avgs_transl = {}
+
 volume_count = {}
 moving_volumes = {}
 avg_progress = {}
+avg_progress_transl = {}
 
 print('Getting Category Averages')
 #Get averages for volumes in category
 for year in years:
-    df = volumes[(volumes['Year'] >= (year-10)) & (volumes['Year'] <= (year+10))]
+
+    if config.bins is not False:
+        df = volumes[(volumes['Year'] >= (year-10)) & (volumes['Year'] <= (year+10))]
+    else:
+        df = volumes[volumes['Year'] == year]
+
+    df_transl = df[df['translation'] == 1]
+
     for category in categories:
         volumes_time[category].append(category_averages(df, year, category))
+    
+    cat_avgs[year] = category_averages_overall(df)
+    cat_avgs_transl[year] = category_averages_overall(df_transl)
+
+
 
     volume_count[year] = len(df)
     moving_volumes[year] = df
-    avg_progress[year] = statistics.mean(df['progress_percentile_main'])
+    if len(df) >= 1:
+        avg_progress[year] = statistics.mean(df['progress_percentile_main'])
+    else:
+        avg_progress[year] = np.nan
 
+    if len(df_transl) >= 1:
+        avg_progress_transl[year] = statistics.mean(df_transl['progress_percentile_main'])
+    else:
+        avg_progress_transl[year] = np.nan
 
 for category in categories:
     volumes_time[category] = pd.concat(volumes_time[category])
@@ -82,6 +116,12 @@ for category in categories:
     print(volumes_time[category].head())
     volumes_time[category]['Volumes_rolling'] = volumes_time[category]['Volumes'].rolling(window = 20, min_periods=1, center=True).mean()
     print(volumes_time[category].head())
+
+cat_avgs = pd.concat(cat_avgs).reset_index(drop=True)
+cat_avgs_transl = pd.concat(cat_avgs_transl).reset_index(drop=True)
+
+print(cat_avgs)
+print(cat_avgs_transl)
 
 make_dir(config.output_folder + 'volumes_over_time/')
 
@@ -159,8 +199,19 @@ ax1.set_xlabel('Year')
 ax1.set_yticks([0,0.25,0.5,0.75,1])
 fig.savefig(config.output_folder + 'volumes_over_time/' + 'avg_progress_raw.png', dpi = 200)
 
-print(min(volumes['progress_percentile_main']))
+#Category Averages over time, translation vs. corpus
+fig, (ax1) = plt.subplots(1,1)
+ax1.plot(cat_avgs['Year'], cat_avgs['Religion'], color = 'b', label = 'Religion', linestyle = 'solid')
+ax1.plot(cat_avgs['Year'], cat_avgs['Science'], color = 'g', label = 'Science', linestyle = 'dashdot')
+ax1.plot(cat_avgs['Year'], cat_avgs['Political Economy'], color = 'r', label = 'Political Economy', linestyle = 'dotted')
+ax1.plot(cat_avgs_transl['Year'], cat_avgs_transl['Religion'], color = 'b', label = 'Religion (Translated)', linestyle = 'dashed')
+ax1.plot(cat_avgs_transl['Year'], cat_avgs_transl['Science'], color = 'g', label = 'Science (Translated)', linestyle = (0, (3, 5, 1, 5)))
+ax1.plot(cat_avgs_transl['Year'], cat_avgs_transl['Political Economy'], color = 'r', label = 'Political Economy (Translated)', linestyle = (0, (1, 1)))
+# ax1.plot(cat_avgs_transl['Year'], cat_avgs['Political Economy'], color = 'r', label = 'Political Economy (Translated)', linestyle = 'solid')
+plt.legend(loc = 'upper right')
+plt.ylim([0, 1])
 
+fig.savefig(config.output_folder + 'volumes_over_time/corpus_vs_transl.png', dpi = 200)
 # #Ternary plots
 
 if config.half_century is True:
@@ -232,127 +283,127 @@ def ternary_plots(data, color, filepath, legend_title, years = years, grayscale 
 
 print(volumes)
 
-print('Original Progress Triangles, color')
-ternary_plots(data = moving_volumes,
-              color = 'progress_percentile_original',
-              legend_title='Progress (Percentile)',
-              filepath = config.output_folder + 'volume_triangles/progress_original/color/')
+# print('Original Progress Triangles, color')
+# ternary_plots(data = moving_volumes,
+#               color = 'progress_percentile_original',
+#               legend_title='Progress (Percentile)',
+#               filepath = config.output_folder + 'volume_triangles/progress_original/color/')
 
-print('Original Progress Triangles, grayscale')
-ternary_plots(data = moving_volumes,
-              color = 'progress_percentile_original',
-              legend_title='Progress (Percentile)',
-              filepath = config.output_folder + 'volume_triangles/progress_original/grayscale/',
-              grayscale=True)
+# print('Original Progress Triangles, grayscale')
+# ternary_plots(data = moving_volumes,
+#               color = 'progress_percentile_original',
+#               legend_title='Progress (Percentile)',
+#               filepath = config.output_folder + 'volume_triangles/progress_original/grayscale/',
+#               grayscale=True)
 
-print('Main Progress Triangles, color')
-ternary_plots(data = moving_volumes,
-              color = 'progress_percentile_main',
-              legend_title='Progress (Percentile)',
-              filepath = config.output_folder + 'volume_triangles/progress_main/color/')
+# print('Main Progress Triangles, color')
+# ternary_plots(data = moving_volumes,
+#               color = 'progress_percentile_main',
+#               legend_title='Progress (Percentile)',
+#               filepath = config.output_folder + 'volume_triangles/progress_main/color/')
 
-print('Main Progress Triangles, grayscale')
-ternary_plots(data = moving_volumes,
-              color = 'progress_percentile_main',
-              legend_title='Progress (Percentile)',
-              filepath = config.output_folder + 'volume_triangles/progress_main/grayscale/',
-              grayscale=True)
+# print('Main Progress Triangles, grayscale')
+# ternary_plots(data = moving_volumes,
+#               color = 'progress_percentile_main',
+#               legend_title='Progress (Percentile)',
+#               filepath = config.output_folder + 'volume_triangles/progress_main/grayscale/',
+#               grayscale=True)
 
-print('Secondary Progress Triangles, color')
-ternary_plots(data = moving_volumes,
-              color = 'progress_percentile_secondary',
-              legend_title='Progress (Percentile)',
-              filepath = config.output_folder + 'volume_triangles/progress_secondary/color/')
+# print('Secondary Progress Triangles, color')
+# ternary_plots(data = moving_volumes,
+#               color = 'progress_percentile_secondary',
+#               legend_title='Progress (Percentile)',
+#               filepath = config.output_folder + 'volume_triangles/progress_secondary/color/')
 
-print('Secondary Progress Triangles, grayscale')
-ternary_plots(data = moving_volumes,
-              color = 'progress_percentile_secondary',
-              legend_title='Progress (Percentile)',
-              filepath = config.output_folder + 'volume_triangles/progress_secondary/grayscale/',
-              grayscale=True)
+# print('Secondary Progress Triangles, grayscale')
+# ternary_plots(data = moving_volumes,
+#               color = 'progress_percentile_secondary',
+#               legend_title='Progress (Percentile)',
+#               filepath = config.output_folder + 'volume_triangles/progress_secondary/grayscale/',
+#               grayscale=True)
 
-print('Optimistic Triangles, color')
-ternary_plots(data = moving_volumes,
-              color = 'optimistic_percentile',
-              legend_title='Optimistic (Percentile)',
-              filepath = config.output_folder + 'volume_triangles/optimistic/')
+# print('Optimistic Triangles, color')
+# ternary_plots(data = moving_volumes,
+#               color = 'optimistic_percentile',
+#               legend_title='Optimistic (Percentile)',
+#               filepath = config.output_folder + 'volume_triangles/optimistic/')
 
-print('Industry Triangles, color')
-ternary_plots(data = moving_volumes,
-              color = 'industry_3_percentile',
-              legend_title='Industry (Percentile)',
-              filepath = config.output_folder + 'volume_triangles/industry/color/')
+# print('Industry Triangles, color')
+# ternary_plots(data = moving_volumes,
+#               color = 'industry_3_percentile',
+#               legend_title='Industry (Percentile)',
+#               filepath = config.output_folder + 'volume_triangles/industry/color/')
 
-print('Industry Triangles, grayscale')
-ternary_plots(data = moving_volumes,
-              color = 'industry_3_percentile',
-              legend_title='Industry (Percentile)',
-              filepath = config.output_folder + 'volume_triangles/industry/grayscale/',
-              grayscale=True)
-
-
-print('Industry Triangles (1643), color')
-ternary_plots(data = moving_volumes,
-              color = 'industry_1643_percentile',
-              legend_title='Industry (Percentile)',
-              filepath = config.output_folder + 'volume_triangles/industry_1643/color/')
-
-print('Industry Triangles (1643), grayscale')
-ternary_plots(data = moving_volumes,
-              color = 'industry_1643_percentile',
-              legend_title='Industry (Percentile)',
-              filepath = config.output_folder + 'volume_triangles/industry_1643/grayscale/',
-              grayscale=True)
-
-print('Size based, increasing')
-ternary_plots(data = moving_volumes,
-              color = 'progress_percentile_main',
-              size = 'industry_3_percentile',
-              legend_title='Progress (Percentile)',
-              show_legend = False,
-              filepath = config.output_folder + 'volume_triangles/industry_optimism/increasing_scale/')
-
-print('Size based, decreasing')
-ternary_plots(data = moving_volumes,
-              color = 'progress_percentile_main',
-              size = 'industry_3_percentile',
-              legend_title='Progress (Percentile)',
-              decreasing_scale=True,
-              filepath = config.output_folder + 'volume_triangles/industry_optimism/decreasing_scale/')
-
-print('Size based, increasing, 1643')
-ternary_plots(data = moving_volumes,
-              color = 'progress_percentile_main',
-              size = 'industry_1643_percentile',
-              legend_title='Progress (Percentile)',
-              show_legend = False,
-              filepath = config.output_folder + 'volume_triangles/industry_optimism_1643/increasing_scale/')
-
-print('Size based, decreasing, 1643')
-ternary_plots(data = moving_volumes,
-              color = 'progress_percentile_main',
-              size = 'industry_1643_percentile',
-              legend_title='Progress (Percentile)',
-              decreasing_scale=True,
-              show_legend = False,
-              filepath = config.output_folder + 'volume_triangles/industry_optimism_1643/decreasing_scale/')
+# print('Industry Triangles, grayscale')
+# ternary_plots(data = moving_volumes,
+#               color = 'industry_3_percentile',
+#               legend_title='Industry (Percentile)',
+#               filepath = config.output_folder + 'volume_triangles/industry/grayscale/',
+#               grayscale=True)
 
 
-print('Progress minus regression, original')
-ternary_plots(data=moving_volumes,
-              color='progress_regression_percentile_original',
-              legend_title='Progress - Regression (Percentile)',
-              filepath = config.output_folder + 'volume_triangles/progress_regression_original/')
+# print('Industry Triangles (1643), color')
+# ternary_plots(data = moving_volumes,
+#               color = 'industry_1643_percentile',
+#               legend_title='Industry (Percentile)',
+#               filepath = config.output_folder + 'volume_triangles/industry_1643/color/')
 
-print('Progress minus regression, main')
-ternary_plots(data=moving_volumes,
-              color='progress_regression_percentile_main',
-              legend_title='Progress - Regression (Percentile)',
-              filepath = config.output_folder + 'volume_triangles/progress_regression_main/')
+# print('Industry Triangles (1643), grayscale')
+# ternary_plots(data = moving_volumes,
+#               color = 'industry_1643_percentile',
+#               legend_title='Industry (Percentile)',
+#               filepath = config.output_folder + 'volume_triangles/industry_1643/grayscale/',
+#               grayscale=True)
+
+# print('Size based, increasing')
+# ternary_plots(data = moving_volumes,
+#               color = 'progress_percentile_main',
+#               size = 'industry_3_percentile',
+#               legend_title='Progress (Percentile)',
+#               show_legend = False,
+#               filepath = config.output_folder + 'volume_triangles/industry_optimism/increasing_scale/')
+
+# print('Size based, decreasing')
+# ternary_plots(data = moving_volumes,
+#               color = 'progress_percentile_main',
+#               size = 'industry_3_percentile',
+#               legend_title='Progress (Percentile)',
+#               decreasing_scale=True,
+#               filepath = config.output_folder + 'volume_triangles/industry_optimism/decreasing_scale/')
+
+# print('Size based, increasing, 1643')
+# ternary_plots(data = moving_volumes,
+#               color = 'progress_percentile_main',
+#               size = 'industry_1643_percentile',
+#               legend_title='Progress (Percentile)',
+#               show_legend = False,
+#               filepath = config.output_folder + 'volume_triangles/industry_optimism_1643/increasing_scale/')
+
+# print('Size based, decreasing, 1643')
+# ternary_plots(data = moving_volumes,
+#               color = 'progress_percentile_main',
+#               size = 'industry_1643_percentile',
+#               legend_title='Progress (Percentile)',
+#               decreasing_scale=True,
+#               show_legend = False,
+#               filepath = config.output_folder + 'volume_triangles/industry_optimism_1643/decreasing_scale/')
+
+
+# print('Progress minus regression, original')
+# ternary_plots(data=moving_volumes,
+#               color='progress_regression_percentile_original',
+#               legend_title='Progress - Regression (Percentile)',
+#               filepath = config.output_folder + 'volume_triangles/progress_regression_original/')
+
+# print('Progress minus regression, main')
+# ternary_plots(data=moving_volumes,
+#               color='progress_regression_percentile_main',
+#               legend_title='Progress - Regression (Percentile)',
+#               filepath = config.output_folder + 'volume_triangles/progress_regression_main/')
  
-print('Progress minus regression, secondary')
-ternary_plots(data=moving_volumes,
-              color='progress_regression_percentile_secondary',
-              legend_title='Progress - Regression',
-              filepath = config.output_folder + 'volume_triangles/progress_regression_secondary/')
+# print('Progress minus regression, secondary')
+# ternary_plots(data=moving_volumes,
+#               color='progress_regression_percentile_secondary',
+#               legend_title='Progress - Regression',
+#               filepath = config.output_folder + 'volume_triangles/progress_regression_secondary/')
 

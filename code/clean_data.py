@@ -22,6 +22,8 @@ topic_weights_80 = pd.read_csv('../input/20240414_topics.txt', sep = '\t', linet
 metapath = '../input/metadata.p'
 metadata = pickle.load(open(metapath, 'rb'))
 
+translations = pd.read_csv('../input/translations.csv')
+
 print('Cleaning Data')
 topic_weights_full.drop(columns = 0, inplace = True)
 topic_weights_full[1] = [string[string.rfind('/UK_data/')+9:-4] for string in topic_weights_full[1]]
@@ -48,6 +50,8 @@ def fix_htid(row):
     return row['HTID'].replace(":","+").replace("/", "=")
 
 metadata['HTID'] = metadata.apply(fix_htid, axis=1)
+
+metadata = metadata.merge(translations, on= 'HTID', how = 'left')
 
 
 print('Exporting Data')
