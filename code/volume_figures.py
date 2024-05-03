@@ -95,8 +95,6 @@ for year in years:
     cat_avgs[year] = category_averages_overall(df)
     cat_avgs_transl[year] = category_averages_overall(df_transl)
 
-
-
     volume_count[year] = len(df)
     moving_volumes[year] = df
     if len(df) >= 1:
@@ -153,12 +151,12 @@ for year in years:
     else:
         volume_count_raw[year] = 0
 count_raw = pd.DataFrame(volume_count_raw.items(), columns = ['Year', 'Count'])
-
 fig, (ax1) = plt.subplots(1,1)
 ax1.plot(count_raw['Year'], count_raw['Count'], color = 'darkblue', label = 'Volume Count')
 ax1.legend(loc = "upper left")
 ax1.set_xlabel('Year')
 fig.savefig(config.output_folder + 'Total_Volumes_Raw.png', dpi = 200)
+
 
 #Volume count figure, using moving avg
 count = pd.DataFrame(volume_count.items(), columns=['Year', 'Count'])
@@ -199,19 +197,53 @@ ax1.set_xlabel('Year')
 ax1.set_yticks([0,0.25,0.5,0.75,1])
 fig.savefig(config.output_folder + 'volumes_over_time/' + 'avg_progress_raw.png', dpi = 200)
 
-#Category Averages over time, translation vs. corpus
+#Average Sentiment Over Time (Translations vs. Corpus)(Smoothed)
+progress_transl = pd.DataFrame(avg_progress_transl.items(), columns = ['Year', 'avg_progress'])
+
 fig, (ax1) = plt.subplots(1,1)
+ax1.plot(progress['Year'], progress['avg_progress'], color = 'crimson', label = 'Average Progress Score')
+ax1.plot(progress_transl['Year'], progress_transl['avg_progress'], color = 'crimson', label = 'Average Progress Score (Translations)', linestyle = 'dashed')
+ax1.legend(loc = 'upper right')
+ax1.set_xlabel('Year')
+ax1.set_ylabel('Percentile')
+ax1.set_yticks([0,0.25,0.5,0.75,1])
+fig.savefig(config.output_folder + 'volumes_over_time/' + 'avg_progress_translations_corpus.png', dpi = 200)
+
+#Average Sentiment Over Time (Translations vs. Corpus)(Raw)
+avg_progress_raw_transl = {}
+for year in years:
+    if len(volumes[(volumes['Year'] == year) & (volumes['translation'] == 1)]) != 0:
+        avg_progress_raw_transl[year] = statistics.mean(volumes[(volumes['Year'] == year) & (volumes['translation'] == 1)]['progress_percentile_main'])
+    else:
+        avg_progress_raw_transl[year] = np.nan
+progress_transl_raw = pd.DataFrame(avg_progress_raw_transl.items(), columns = ['Year', 'avg_progress'])
+fig, (ax1) = plt.subplots(1,1)
+ax1.plot(progress_raw['Year'], progress_raw['avg_progress'], color = 'crimson', label = 'Average Progress Score')
+ax1.plot(progress_transl_raw['Year'], progress_transl_raw['avg_progress'], color = 'crimson', label = 'Average Progress Score (Translations)', linestyle = 'dashed')
+ax1.legend(loc = 'upper right')
+ax1.set_xlabel('Year')
+ax1.set_ylabel('Percentile')
+ax1.set_yticks([0,0.25,0.5,0.75,1])
+fig.savefig(config.output_folder + 'volumes_over_time/' + 'avg_progress_translations_corpus_raw.png', dpi = 200)
+
+#Category Averages over time, translation vs. corpus
+fig, (ax1) = plt.subplots(1,1, figsize = (9,6))
 ax1.plot(cat_avgs['Year'], cat_avgs['Religion'], color = 'b', label = 'Religion', linestyle = 'solid')
+ax1.plot(cat_avgs_transl['Year'], cat_avgs_transl['Religion'], color = 'b', label = 'Religion (Translations)', linestyle = 'dashed')
 ax1.plot(cat_avgs['Year'], cat_avgs['Science'], color = 'g', label = 'Science', linestyle = 'dashdot')
+ax1.plot(cat_avgs_transl['Year'], cat_avgs_transl['Science'], color = 'g', label = 'Science (Translations)', linestyle = (0, (3, 5, 1, 5)))
 ax1.plot(cat_avgs['Year'], cat_avgs['Political Economy'], color = 'r', label = 'Political Economy', linestyle = 'dotted')
-ax1.plot(cat_avgs_transl['Year'], cat_avgs_transl['Religion'], color = 'b', label = 'Religion (Translated)', linestyle = 'dashed')
-ax1.plot(cat_avgs_transl['Year'], cat_avgs_transl['Science'], color = 'g', label = 'Science (Translated)', linestyle = (0, (3, 5, 1, 5)))
-ax1.plot(cat_avgs_transl['Year'], cat_avgs_transl['Political Economy'], color = 'r', label = 'Political Economy (Translated)', linestyle = (0, (1, 1)))
+ax1.plot(cat_avgs_transl['Year'], cat_avgs_transl['Political Economy'], color = 'r', label = 'Political Economy (Translations)', linestyle = (0, (1, 1)))
 # ax1.plot(cat_avgs_transl['Year'], cat_avgs['Political Economy'], color = 'r', label = 'Political Economy (Translated)', linestyle = 'solid')
-plt.legend(loc = 'upper right')
+plt.legend(loc = 'upper center', ncol = 3)
 plt.ylim([0, 1])
 
-fig.savefig(config.output_folder + 'volumes_over_time/corpus_vs_transl.png', dpi = 200)
+fig.savefig(config.output_folder + 'volumes_over_time/corpus_vs_transl_categories.png', dpi = 200)
+
+
+####Progress scores, translations vs. corpus
+
+
 # #Ternary plots
 
 if config.half_century is True:

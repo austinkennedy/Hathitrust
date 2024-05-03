@@ -31,5 +31,5 @@ subprocess.run(['python', 'volume_figures.py'])
 # print('Running subtriangles.R')
 # subprocess.run(['Rscript', 'subtriangles.R'])
 
-# print('Running biscale_triangles.R')
-# subprocess.run(['Rscript', 'biscale_triangles.R'])
+print('Running biscale_triangles.R')
+subprocess.run(['Rscript', 'biscale_triangles.R'])

@@ -44,7 +44,7 @@ bins = True
 
 # bins = True
 
-####Uncomment this section to not include bins
+###Uncomment this section to not include bins
 
 # topic_weights = 'full'
 

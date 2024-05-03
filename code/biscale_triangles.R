@@ -7,6 +7,7 @@ library(cowplot)
 volumes <- read.csv('../temporary/volumes_scores.csv')
 config <- read.csv('rconfig.csv')
 half_century <- as.logical(config[config$variable == 'half_century', 'value'])
+bins <- as.logical(config[config$variable == 'bins', 'value'])
 output_folder <- config[config$variable == 'output_folder', 'value']
 
 bi_palette <- 'DkViolet2'
@@ -40,8 +41,13 @@ if (!dir.exists(path)){
 volumes <- bi_class(volumes, x = progress_percentile_main, y = industry_1643_percentile, style = 'equal', dim = dimensions)
 
 for (year in years){
+
+  if (bins == TRUE){
   df <- volumes %>% filter(Year >= year - 10,
                            Year <= year + 10)
+  }else{
+    df <- volumes %>% filter(Year == year)
+  }
   
   fig <- ggtern(data = df, mapping = aes(x = Political.Economy, y = Religion, z = Science ,color = bi_class)) +
     geom_point(show.legend = FALSE) +

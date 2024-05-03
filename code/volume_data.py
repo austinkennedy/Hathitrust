@@ -120,3 +120,8 @@ with open('rconfig.csv', 'w', newline='') as csvfile:
         writer.writerow({'variable': 'half_century',  'value': 'TRUE'})
     else:
         writer.writerow({'variable': 'half_century', 'value': 'FALSE'})
+
+    if config.bins is True:
+        writer.writerow({'variable': 'bins', 'value': 'TRUE'})
+    else:
+        writer.writerow({'variable': 'bins', 'value': 'FALSE'})
