@@ -11,6 +11,7 @@ import plotly.figure_factory as ff
 import plotly.graph_objs as go
 from operator import itemgetter
 import config
+import pickle
 
 
 #Load Data
@@ -190,7 +191,10 @@ for year in years:
     else:
         fig.write_image(config.output_folder + 'topic_triangles_grayscale/' + str(year) +'.png')
 
+#export category weights
 
+with open('../temporary/topic_shares.pickle', 'wb') as f:
+    pickle.dump(topic_shares, f)
 
 
 
