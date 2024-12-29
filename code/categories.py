@@ -16,6 +16,7 @@ topics.drop(columns=0, inplace=True)
 
 topics['topic_number'] = list(range(1,len(topics)+1))
 
+print(len(cross))
 print(topics)
 
 #functions
