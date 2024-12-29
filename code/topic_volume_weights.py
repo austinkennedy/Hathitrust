@@ -25,6 +25,7 @@ metadata = pd.read_csv('../temporary/metadata.csv')
 
 #match volume years and fix to be compatible with category weights
 volume_topics = pd.merge(volume_topics, metadata, on = 'HTID', how = 'inner').drop(columns=['oclc','Year'])
+volume_topics.dropna(subset='Year_rounded', inplace=True)
 
 
 def fix_years(df):
@@ -124,12 +125,6 @@ volumes
 
 #export
 volumes.to_csv('../temporary/volumes.csv', index=False)
-
-volumes = volumes.add_suffix('_' + config.topic_weights)
-
-print(volumes)
-
-volumes.to_csv('../temporary/volumes_' + config.topic_weights + '.csv', index=False)
 
 #Topic ternary plots-much easier to do it within this script so as to not have to export/import dictionary of dataframes
 

@@ -6,7 +6,7 @@ import config
 #Import data
 print('Loading Data')
 
-data = pd.read_csv('../temporary/topic_weights_' + config.topic_weights + '.csv')
+data = pd.read_csv('../temporary/topic_weights.csv')
 print(data)
 
 #Function for getting cross-topic weights
