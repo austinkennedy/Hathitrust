@@ -8,10 +8,10 @@ import config
 print('Loading Data')
 #Load Data
 cross = pd.read_csv('../temporary/cross_topics.csv')
-metadata = pd.read_csv('../temporary/metadata.csv')
+metadata = pd.read_csv(config.metadata_path)
 
 #merge years onto volumes
-cross = pd.merge(cross, metadata, on='HTID', how='inner').drop(columns = ['oclc', 'Year'])
+cross = pd.merge(cross, metadata, on='HTID', how='inner')
 
 #create sequence of years
 years=[]
@@ -22,12 +22,12 @@ for year in range(1510,1891):
 def moving_shares(data, year):
     #get 20-year moving average of data, if bins = True
     if config.bins is not False:
-        df = data[(data['Year_rounded'] >= (year-10)) & (data['Year_rounded'] <= (year+10))] #grab volumes within +/- 10 year window
+        df = data[(data['Year'] >= (year-10)) & (data['Year'] <= (year+10))] #grab volumes within +/- 10 year window
     else:
-        df = data[data['Year_rounded'] == year]
+        df = data[data['Year'] == year]
 
 
-    df.drop(columns = 'Year_rounded', inplace=True)
+    df.drop(columns = 'Year', inplace=True)
 
     if 'HTID' in df.columns:
         df.drop(columns = ['HTID'], inplace=True)

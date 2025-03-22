@@ -18,6 +18,8 @@ topic_data = pd.read_csv(config.topic_data, sep = '\t', lineterminator = '\n', h
 metapath = '../input/metadata.p'
 metadata = pickle.load(open(metapath, 'rb'))
 
+metadata_jan2025 = pd.read_csv('../input/metadata_jan2025.csv')
+
 translations = pd.read_csv('../input/translations.csv')
 
 print('Cleaning Data')
@@ -32,10 +34,15 @@ def fix_htid(row):
     return row['HTID'].replace(":","+").replace("/", "=")
 
 metadata['HTID'] = metadata.apply(fix_htid, axis=1)
+metadata_jan2025['HTID'] = metadata_jan2025.apply(fix_htid, axis=1)
 
 metadata = metadata.merge(translations, on= 'HTID', how = 'left')
+metadata_jan2025 = metadata_jan2025.merge(translations, on = 'HTID', how = 'left')
 
+metadata = metadata.drop(columns = ['oclc', 'Year_rounded'])
 
+print(metadata_jan2025)
 print('Exporting Data')
 topic_data_cleaned.to_csv('../temporary/topic_weights.csv', index = False)
 metadata.to_csv('../temporary/metadata.csv', index=False)
+metadata_jan2025.to_csv('../temporary/metadata_jan2025.csv', index=False)

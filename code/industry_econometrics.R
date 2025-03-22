@@ -55,7 +55,10 @@ volumes <- volumes %>%
 #model
 reference = min(bins)
 
-industry_vars <- list('industry_3_percentile', 'industry_1643_percentile')
+# industry_vars <- list('industry_3_percentile', 'industry_1643_percentile')
+
+industry_vars <- list('industry_percentile')
+
 
 for (ind in industry_vars){
   

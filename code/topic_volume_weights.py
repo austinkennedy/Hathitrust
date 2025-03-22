@@ -21,19 +21,19 @@ topics = pd.read_csv('../temporary/topics.csv')
 volume_topics = pd.read_csv('../temporary/topic_weights.csv')
 
 #volume metadata
-metadata = pd.read_csv('../temporary/metadata.csv')
+metadata = pd.read_csv(config.metadata_path)
 
 #match volume years and fix to be compatible with category weights
-volume_topics = pd.merge(volume_topics, metadata, on = 'HTID', how = 'inner').drop(columns=['oclc','Year'])
-volume_topics.dropna(subset='Year_rounded', inplace=True)
+volume_topics = pd.merge(volume_topics, metadata, on = 'HTID', how = 'inner')
+volume_topics.dropna(subset='Year', inplace=True)
 
 
 def fix_years(df):
     for ind,row in df.iterrows():
-        if row['Year_rounded'] > 1890:
-            df.at[ind, 'Year_rounded'] = 1890
-        elif row['Year_rounded'] < 1510:
-            df.at[ind, 'Year_rounded'] = 1510
+        if row['Year'] > 1890:
+            df.at[ind, 'Year'] = 1890
+        elif row['Year'] < 1510:
+            df.at[ind, 'Year'] = 1510
 
     return df
 
@@ -110,7 +110,7 @@ print('Getting volume scores')
 ls = []
 topic_columns = [str(i) for i in topics['topic_number']] #columns need to be called as string
 for ind,row in volume_topics.iterrows():
-    year = int(row['Year_rounded']) #year of volume
+    year = int(row['Year']) #year of volume
     a = np.array(row[topic_columns]) #row of topic weights for each volume, colnames need to correspond to topic numbers
     b = np.array(topic_shares[year]) #topic category weights by year
 
